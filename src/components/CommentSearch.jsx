@@ -2,18 +2,20 @@
 'use client';
 
 import React, { useState } from 'react';
-// Server Actionをインポート (パスは src/app/actions.js を想定)
-import { searchCommentsWithGemini } from '../app/actions';
 
 /** 
- * コメント検索コンポーネント。ユーザー入力を受け付け、Server Action経由でGemini APIを呼び出します。 
- * @param {Array} comments - YouTube APIから取得したコメントの配列 
- * @param {function} onSearchResult - 検索結果のJSON文字列を受け取るコールバック関数 
+ * コメント検索コンポーネント。
+ * ユーザー入力を受け付け、自作のFastAPIバックエンドを経由してGemini検索を行います。
  */
 export const CommentSearch = ({ comments, onSearchResult }) => {
   const [keyword, setKeyword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // バックエンドのAPI URL (ローカル開発用)
+  // 本番環境(GitHub Pages)の場合、バックエンドがどこにホストされているかによって変更が必要です。
+  // 一旦ローカル開発用に設定します。
+  const BACKEND_API_URL = "https://backend-904463184290.asia-northeast1.run.app/api/search-comments";
 
   const handleSearch = async () => {
     if (!keyword.trim() || !comments || comments.length === 0) {
@@ -25,21 +27,37 @@ export const CommentSearch = ({ comments, onSearchResult }) => {
     setError(null);
 
     try {
-      // クライアント側でのAPIキー管理やプロンプト作成は廃止し、
-      // サーバーアクションにキーワードとデータを渡して処理を依頼します。
-      // これによりAPIキーがブラウザに露出するのを防ぎます。
-      const result = await searchCommentsWithGemini(keyword, comments);
+      // バックエンドへ送信するデータ
+      const payload = {
+        keyword: keyword,
+        comments: comments
+      };
 
-      if (result.success) {
-        // 成功した場合、抽出されたJSON文字列を親コンポーネントに渡す
-        onSearchResult(result.data);
+      const response = await fetch(BACKEND_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        // バックエンドからのエラー詳細を取得しようと試みる
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      
+      if (result.success && result.data) {
+          // 抽出されたJSON文字列を親コンポーネントに渡す
+          onSearchResult(result.data); 
       } else {
-        // サーバー側でエラーが発生した場合
-        throw new Error(result.error || "Gemini APIからの応答が不正です。");
+          throw new Error("APIからのレスポンス形式が不正です。");
       }
 
     } catch (e) {
-      console.error('Gemini API呼び出しエラー:', e);
+      console.error('検索API呼び出しエラー:', e);
       setError(`検索中にエラーが発生しました: ${e.message}`);
     } finally {
       setIsLoading(false);
@@ -49,7 +67,7 @@ export const CommentSearch = ({ comments, onSearchResult }) => {
   return (
     <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md mb-6">
       <h2 className="text-xl font-bold mb-3 text-gray-800 dark:text-gray-100">
-        AIキーワード検索
+        AIキーワード検索 (Backend処理)
       </h2>
       <div className="flex space-x-3">
         <input
