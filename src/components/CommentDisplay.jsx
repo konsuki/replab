@@ -24,7 +24,7 @@ const YouTubeComment = ({ data, isReply = false }) => {
   if (!data) return null;
 
   return (
-    <div className={`flex gap-3 w-full ${isReply ? 'mt-4' : 'mb-6'}`}>
+    <div className={`flex gap-3 w-full ${isReply ? 'mt-4' : ''}`}>
       {/* 左側: アバター */}
       <Avatar name={data.author} />
 
@@ -145,7 +145,7 @@ export const CommentDisplay = ({ apiData, searchResultJson }) => {
       </h2>
       
       {parsedSearchResult ? (
-          <div className="bg-blue-50 dark:bg-gray-900/50 p-4 rounded-xl border border-blue-100 dark:border-gray-700">
+          <div className="bg-blue-50 dark:bg-gray-900/50 mb-6 p-4 rounded-xl border border-blue-100 dark:border-gray-700">
               {parsedSearchResult.length > 0 ? (
                  <div className="space-y-2">
                     {parsedSearchResult.map((comment, index) => (
