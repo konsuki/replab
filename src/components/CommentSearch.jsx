@@ -16,6 +16,7 @@ export const CommentSearch = ({ comments, onSearchResult }) => {
   // 本番環境(GitHub Pages)の場合、バックエンドがどこにホストされているかによって変更が必要です。
   // 一旦ローカル開発用に設定します。
   const BACKEND_API_URL = "https://backend-904463184290.asia-northeast1.run.app/api/search-comments";
+  // const BACKEND_API_URL = "http://localhost:8000/api/search-comments"; // ローカル開発用
 
   const handleSearch = async () => {
     if (!keyword.trim() || !comments || comments.length === 0) {

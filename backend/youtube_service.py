@@ -16,14 +16,18 @@ def format_comment_data(
     """コメントまたは返信のデータを整形して辞書として返します。"""
 
     if is_reply:
-        target_snippet = snippet_data
+        # 【修正箇所】
+        # 返信データ(reply_info)は { "snippet": { "textDisplay": ... } } という構造のため、
+        # "snippet" キーの中身を取り出して target_snippet に設定します。
+        target_snippet = snippet_data.get("snippet", {})
         reply_count = 0
     else:
         # commentThreadsのitemまたはrepliesの中のコメントかを判断
         if "topLevelComment" in snippet_data:
             target_snippet = snippet_data["topLevelComment"]["snippet"]
         else:
-            target_snippet = snippet_data["snippet"]
+            # ここに来るケースは稀ですが、構造に合わせて念のため残しています
+            target_snippet = snippet_data.get("snippet", snippet_data)
 
         reply_count = snippet_data.get("totalReplyCount", 0)
 
@@ -34,8 +38,11 @@ def format_comment_data(
 
     try:
         # ISO 8601形式の時刻文字列を整形
-        pubdate = datetime.datetime.strptime(pubdate_str, "%Y-%m-%dT%H:%M:%SZ")
-        pubdate_formatted = pubdate.strftime("%Y/%m/%d %H:%M:%S")
+        if pubdate_str:
+            pubdate = datetime.datetime.strptime(pubdate_str, "%Y-%m-%dT%H:%M:%SZ")
+            pubdate_formatted = pubdate.strftime("%Y/%m/%d %H:%M:%S")
+        else:
+            pubdate_formatted = None
     except (ValueError, TypeError, AttributeError):
         pubdate_formatted = pubdate_str
 
@@ -96,7 +103,8 @@ def fetch_comments_with_pagination(
             current_page_comments = []
             for comment_thread in resource.get("items", []):
                 # 1. トップレベルコメントの整形
-                comment = format_comment_data(comment_thread["snippet"])
+                # ここでは commentThreads リソースの snippet を渡している
+                comment = format_comment_data(comment_thread["snippet"], is_reply=False)
 
                 # 2. 返信の処理 (snippetに含まれる最初の数件のみ)
                 replies = []
@@ -105,6 +113,8 @@ def fetch_comments_with_pagination(
                     and "comments" in comment_thread["replies"]
                 ):
                     for reply_info in comment_thread["replies"]["comments"]:
+                        # ここでは comments リソースそのものを渡しているため、
+                        # format_comment_data 側で .get("snippet") する必要がある
                         replies.append(format_comment_data(reply_info, is_reply=True))
 
                 comment["replies"] = replies
