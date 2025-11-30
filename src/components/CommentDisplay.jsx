@@ -145,7 +145,7 @@ export const CommentDisplay = ({ apiData, searchResultJson }) => {
       </h2>
       
       {parsedSearchResult ? (
-          <div className="bg-blue-50 dark:bg-gray-900/50 p-4 rounded-xl border border-blue-100 mb-6 dark:border-gray-700">
+          <div className="bg-blue-50 dark:bg-gray-900/50 p-4 rounded-xl border border-blue-100 dark:border-gray-700">
               {parsedSearchResult.length > 0 ? (
                  <div className="space-y-2">
                     {parsedSearchResult.map((comment, index) => (
