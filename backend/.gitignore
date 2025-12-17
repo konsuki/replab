@@ -1,1 +1,7 @@
+node_modules/
+out/
+.git
+.github/workflows/
+backend/__pycache__/
+.next/
 venv/
