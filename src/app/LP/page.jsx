@@ -11,6 +11,9 @@ import { UseCaseTabs } from '../../components/LP/UseCaseTabs';
 import { CommentDisplay } from '../../components/CommentDisplay';
 import { CommentSearch } from '../../components/CommentSearch';
 
+// ファイルの先頭に追加
+import Link from 'next/link'; 
+
 // APIエンドポイント設定
 // const YOUTUBE_API_URL = 'http://localhost:8000/api/comments'; // ローカル用
 const YOUTUBE_API_URL = 'https://backend-904463184290.asia-northeast1.run.app/api/comments';
@@ -31,9 +34,11 @@ const Header = () => (
       </nav>
       <div className="flex gap-3">
         <button className="text-sm font-bold text-gray-600 hover:text-gray-900">ログイン</button>
-        <button className="text-sm font-bold bg-gray-900 text-white px-4 py-2 rounded-full hover:bg-gray-700 transition">
-          登録する
-        </button>
+        <Link href="/auth/signin">
+  <button className="text-sm font-bold bg-gray-900 text-white px-4 py-2 rounded-full hover:bg-gray-700 transition">
+    登録する
+  </button>
+</Link>
       </div>
     </div>
   </header>

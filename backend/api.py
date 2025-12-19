@@ -1,19 +1,23 @@
+# === api.py ===
 # コメント取得用API
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse  # 追加: エラーレスポンス用
+from starlette.middleware.sessions import SessionMiddleware # 追加: Authlibで必須
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import Dict, Any, List, Optional
 import os
 import json
 import google.generativeai as genai
 
-# 追加: Stripeライブラリ
+# Stripeライブラリ
 import stripe
 from dotenv import load_dotenv
 
 # サービスロジックをインポート
 import youtube_service
+# 認証ロジックをインポート
+import auth # 追加: 作成したauth.py
 
 # .envファイルから環境変数を読み込む
 load_dotenv()
@@ -25,7 +29,7 @@ if not GEMINI_API_KEY:
 
 genai.configure(api_key=GEMINI_API_KEY)
 
-# --- Stripe Setup (追加) ---
+# --- Stripe Setup ---
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_PRICE_ID = os.getenv("STRIPE_PRICE_ID")
 # フロントエンドのURL (デフォルトはローカル環境)
@@ -38,6 +42,16 @@ else:
 
 # --- FastAPI App Setup ---
 app = FastAPI()
+
+# 追加: セッションミドルウェアの設定
+# AuthlibがGoogleログインフロー中の状態（state）を一時保存するために必要です。
+# max_ageは認証フローが完了するまでの有効期限（ここでは1時間）
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=os.getenv("SECRET_KEY", "your_secret_key_should_be_random"),
+    max_age=3600,
+    https_only=False # ローカル開発(HTTP)でも動くようにFalse。本番がHTTPSならTrue推奨
+)
 
 # CORS Setup
 origins = [
@@ -55,6 +69,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# 追加: Authルーターの登録
+# これにより /auth/login, /auth/callback が有効になります
+app.include_router(auth.router)
+
+
 # --- Application Constants ---
 VIDEO_ID = "fmFn2otWosE"
 GOAL_MAX_RESULTS = 1000
@@ -66,8 +85,7 @@ class SearchRequest(BaseModel):
     comments: List[Any]
 
 
-# --- Main API Endpoint ---
-
+# --- Main API Endpoints ---
 
 @app.get("/api/comments")
 async def get_video_comments_api(
@@ -122,7 +140,7 @@ async def search_comments_with_gemini(request: SearchRequest) -> Dict[str, Any]:
         # 5. プロンプト作成
         prompt = f"""
         以下の【コメント配列】の中から、textプロパティの値に"{keyword}"が含まれるオブジェクトのみを抽出してください。
-        
+         
         【制約事項】
         1. 結果は抽出されたオブジェクトの配列を含むJSON文字列として、他の説明文やマークダウン( ```json 等)を付けずに**そのまま出力**してください。
         2. 抽出対象は、必ずtextプロパティにキーワードが含まれているものに限定してください。
@@ -146,8 +164,7 @@ async def search_comments_with_gemini(request: SearchRequest) -> Dict[str, Any]:
         raise HTTPException(status_code=500, detail=f"Gemini API Error: {str(e)}")
 
 
-# --- Stripe Checkout Endpoint (追加) ---
-
+# --- Stripe Checkout Endpoint ---
 
 @app.post("/api/create-checkout-session")
 async def create_checkout_session():

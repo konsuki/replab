@@ -6,4 +6,7 @@ google-api-python-client
 youtube-transcript-api
 google-generativeai
 python-dotenv
-pydantic
+authlib
+itsdangerous
+python-jose[cryptography]
+httpx
