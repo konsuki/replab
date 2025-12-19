@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Header } from '../components/Header';
 import { CommentDisplay } from '../components/CommentDisplay';
 import { CommentSearch } from '../components/CommentSearch'; 
 import { VideoUrlInput } from '../components/VideoUrlInput'; // 新しくインポート
@@ -54,6 +55,7 @@ export default function Home() {
 
     return (
         <div className="container mx-auto p-4 md:p-8">
+            <Header/>
             <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-gray-50">
                 YouTubeコメント分析ツール (Gemini連携)
             </h1>

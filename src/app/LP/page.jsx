@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 // --- 作成したUIコンポーネントのインポート ---
+import { Header } from '../../components/Header';
 import { HeroSection } from '../../components/LP/HeroSection';
 import { FeaturesAndWorkflow } from '../../components/LP/FeaturesAndWorkflow';
 import { UseCaseTabs } from '../../components/LP/UseCaseTabs';
@@ -17,32 +18,6 @@ import Link from 'next/link';
 // APIエンドポイント設定
 // const YOUTUBE_API_URL = 'http://localhost:8000/api/comments'; // ローカル用
 const YOUTUBE_API_URL = 'https://backend-904463184290.asia-northeast1.run.app/api/comments';
-
-
-// --- 簡易ヘッダーコンポーネント (ファイル内定義) ---
-const Header = () => (
-  <header className="absolute top-0 left-0 w-full z-50 border-b border-transparent">
-    <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-      <div className="flex items-center gap-2 font-bold text-xl text-gray-800">
-        <span className="bg-blue-600 text-white px-2 py-1 rounded text-sm">AI</span>
-        <span>CommentAnalyzer</span>
-      </div>
-      <nav className="hidden md:flex gap-6 text-sm font-medium text-gray-600">
-        <a href="#features" className="hover:text-blue-600 transition">機能</a>
-        <a href="#usecases" className="hover:text-blue-600 transition">活用事例</a>
-        <a href="#pricing" className="hover:text-blue-600 transition">料金</a>
-      </nav>
-      <div className="flex gap-3">
-        <button className="text-sm font-bold text-gray-600 hover:text-gray-900">ログイン</button>
-        <Link href="/auth/signin">
-  <button className="text-sm font-bold bg-gray-900 text-white px-4 py-2 rounded-full hover:bg-gray-700 transition">
-    登録する
-  </button>
-</Link>
-      </div>
-    </div>
-  </header>
-);
 
 // --- 信頼性/口コミセクション (ファイル内定義) ---
 const TestimonialsSection = () => (
