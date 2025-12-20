@@ -3,26 +3,60 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
+// JWTトークンの中身(ペイロード)をデコードするヘルパー関数
+const parseJwt = (token) => {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
+  } catch (e) {
+    console.error('Failed to parse JWT:', e);
+    return null;
+  }
+};
+
 export const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false); // 追加: メニュー開閉状態
+  const [userInfo, setUserInfo] = useState({ email: '', picture: '' }); // ユーザー情報を格納
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   useEffect(() => {
-    // マウント時にログイン状態をチェック
+    // マウント時にローカルストレージからトークンを取得
     const token = localStorage.getItem('accessToken');
-    setIsLoggedIn(!!token);
+    
+    if (token) {
+      // トークンがあればデコードしてユーザー情報を取得
+      const decoded = parseJwt(token);
+      if (decoded) {
+        setIsLoggedIn(true);
+        setUserInfo({
+          email: decoded.email,
+          picture: decoded.picture // GoogleのアイコンURL
+        });
+      } else {
+        // トークンが不正な場合はログアウト扱いにする
+        localStorage.removeItem('accessToken');
+        setIsLoggedIn(false);
+      }
+    }
   }, []);
 
   const handleLogout = () => {
     if (confirm('ログアウトしますか？')) {
       localStorage.removeItem('accessToken');
       setIsLoggedIn(false);
-      setIsUserMenuOpen(false); // メニューも閉じる
+      setUserInfo({ email: '', picture: '' });
+      setIsUserMenuOpen(false);
       window.location.reload();
     }
   };
 
-  // ユーザーメニューの切り替え
   const toggleUserMenu = () => {
     setIsUserMenuOpen(!isUserMenuOpen);
   };
@@ -31,7 +65,7 @@ export const Header = () => {
     <header className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 transition-all duration-300">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         
-        {/* ロゴエリア (クリックでアプリのトップへ) */}
+        {/* ロゴエリア */}
         <Link href="/" className="flex items-center gap-2 font-bold text-xl text-gray-800 hover:opacity-80 transition">
           <span className="bg-blue-600 text-white px-2 py-1 rounded text-sm">AI</span>
           <span>CommentAnalyzer</span>
@@ -39,14 +73,8 @@ export const Header = () => {
 
         {/* ナビゲーション (PC) */}
         <nav className="hidden md:flex gap-6 text-sm font-medium text-gray-600">
-          {/* 
-             修正ポイント: 
-             セクションの実体は "src/app/LP/page.jsx" にあるため、
-             "/LP#id名" と指定することで、どこからでもLPの該当箇所へ遷移・スクロールします。
-          */}
           <Link href="/LP#features" className="hover:text-blue-600 transition">機能</Link>
           <Link href="/LP#usecases" className="hover:text-blue-600 transition">活用事例</Link>
-          {/* 料金セクションなどがまだない場合は仮で "#" またはLPを指定 */}
           <Link href="/LP#pricing" className="hover:text-blue-600 transition">料金</Link>
         </nav>
 
@@ -60,15 +88,27 @@ export const Header = () => {
               </button>
 
               <div className="relative">
+                {/* アイコンボタン */}
                 <button 
                   onClick={toggleUserMenu}
                   className="w-9 h-9 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 p-[2px] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform active:scale-95"
                 >
                    <div className="w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
-                     <span className="font-bold text-blue-600 text-sm">U</span>
+                     {/* Googleアイコン画像を表示 */}
+                     {userInfo.picture ? (
+                       <img 
+                         src={userInfo.picture} 
+                         alt="User Icon" 
+                         className="w-full h-full object-cover"
+                         referrerPolicy="no-referrer" // Google画像を表示する際のリファラ対策
+                       />
+                     ) : (
+                       <span className="font-bold text-blue-600 text-sm">U</span>
+                     )}
                    </div>
                 </button>
 
+                {/* メニュー */}
                 {isUserMenuOpen && (
                   <>
                     <div 
@@ -79,7 +119,10 @@ export const Header = () => {
                     <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-100 py-1 z-20 animate-in fade-in zoom-in-95 duration-100">
                       <div className="px-4 py-3 border-b border-gray-100">
                         <p className="text-xs text-gray-500">ログイン中</p>
-                        <p className="text-sm font-bold text-gray-800 truncate">user@example.com</p>
+                        {/* 実際のメールアドレスを表示 */}
+                        <p className="text-sm font-bold text-gray-800 truncate" title={userInfo.email}>
+                          {userInfo.email || 'unknown user'}
+                        </p>
                       </div>
                       
                       <div className="py-1">
