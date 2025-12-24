@@ -1,31 +1,27 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 
-// --- 作成したUIコンポーネントのインポート ---
+// --- コンポーネントのインポート ---
 import { Header } from '../../components/Header';
-import { HeroSection } from '../../components/LP/HeroSection';
+import { HeroSection } from '../../components/LP/HeroSection'; // デザイン維持のためこれを使用
 import { FeaturesAndWorkflow } from '../../components/LP/FeaturesAndWorkflow';
 import { UseCaseTabs } from '../../components/LP/UseCaseTabs';
-import { Footer } from '../../components/Footer'
-
-// --- 既存の機能コンポーネントのインポート (site2) ---
+import { Footer } from '../../components/Footer';
 import { CommentDisplay } from '../../components/CommentDisplay';
 import { CommentSearch } from '../../components/CommentSearch';
+import { LimitModal } from '../../components/LimitModal'; // ★ 追加: モーダル
 
-// ファイルの先頭に追加
-import Link from 'next/link'; 
+// APIエンドポイント
+const YOUTUBE_API_URL = 'http://localhost:8000/api/comments';
+// const YOUTUBE_API_URL = 'https://backend-904463184290.asia-northeast1.run.app/api/comments';
 
-// APIエンドポイント設定
-// const YOUTUBE_API_URL = 'http://localhost:8000/api/comments'; // ローカル用
-const YOUTUBE_API_URL = 'https://backend-904463184290.asia-northeast1.run.app/api/comments';
-
-// --- 信頼性/口コミセクション (ファイル内定義) ---
+// --- 信頼性セクション (変更なし) ---
 const TestimonialsSection = () => (
   <section className="container mx-auto px-4 py-20 text-center">
     <h2 className="text-2xl font-bold mb-4">沢山の方にご愛用いただいております</h2>
     <p className="text-gray-500 mb-10">あなたもきっと気に入るはず。</p>
-    
     <div className="flex flex-col md:flex-row gap-6 justify-center max-w-5xl mx-auto">
       {[
         { 
@@ -41,7 +37,6 @@ const TestimonialsSection = () => (
           color: "border-blue-500 text-blue-600" 
         }
       ].map((item, idx) => (
-        /* ↓↓↓ ここを修正しました (key={}) ↓↓↓ */
         <div key={idx} className={`w-full md:w-1/2 bg-gray-50 p-6 rounded-xl border-l-4 ${item.color.split(' ')[0]} text-left shadow-sm`}>
           <div className={`font-bold text-lg mb-2 ${item.color.split(' ')[1]}`}>{item.name}</div>
           <p className="text-sm text-gray-700 italic mb-4">"{item.text}"</p>
@@ -65,7 +60,9 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [searchResult, setSearchResult] = useState(null);
   
-  // 結果エリアへのスクロール用ref
+  // ★ 追加: モーダル表示管理用State
+  const [showLimitModal, setShowLimitModal] = useState(false);
+
   const resultRef = useRef(null);
 
   // --- API取得ロジック ---
@@ -74,11 +71,44 @@ export default function Home() {
     setApiData(null);
     setLoading(true);
     setError(null);
+    setShowLimitModal(false); // ★ リセット
 
     try {
-      // API呼び出し
+      // ★ トークン取得 (LPでも制限チェックのため必要)
+      const token = localStorage.getItem('accessToken');
+      
+      // 未ログインの場合の挙動
+      // ※ API側でログイン必須にしている場合、トークンがないと401になります。
+      // LPでの「お試し」を未ログインでもさせたい場合は、API側の修正が必要ですが、
+      // ここでは「制限機能」のためにトークンを送る実装にします。
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const url = `${YOUTUBE_API_URL}?video_id=${videoId}`;
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: headers // ★ ヘッダー付与
+      });
+
+      // ★ 402 (Payment Required) チェック
+      if (response.status === 402) {
+        setShowLimitModal(true); // モーダル表示
+        setLoading(false);
+        return;
+      }
+
+      // 401 (Unauthorized) チェック
+      if (response.status === 401) {
+        // 未ログインまたはトークン期限切れ
+        setError("この機能を利用するにはログインが必要です。");
+        setLoading(false);
+        return;
+      }
+
       const data = await response.json();
 
       if (data.status === 'error') {
@@ -95,46 +125,44 @@ export default function Home() {
     }
   };  
 
-  // --- データ取得完了時の自動スクロール ---
+  // --- 自動スクロール ---
   useEffect(() => {
     if (apiData && !loading && resultRef.current) {
-      // 少し待ってからスムーズにスクロール
       setTimeout(() => {
         resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 100);
     }
   }, [apiData, loading]);
 
-  // --- Gemini検索結果を受け取るハンドラ ---
   const handleSearchResult = (resultData) => {
     setSearchResult(resultData);
-    // 検索完了後も少しスクロール調整すると親切かも知れません（今回は省略）
   };
 
   return (
-    
     <div className="min-h-screen bg-white font-sans text-gray-900">
-      
-      {/* 1. ヘッダー */}
       <Header />
 
-      {/* 2. ヒーローセクション (入力フォームを含む) */}
+      {/* 2. ヒーローセクション */}
+      {/* デザインはそのままで、onFetch関数を渡すだけ */}
       <HeroSection onFetch={fetchComments} loading={loading} />
 
-      {/* グローバルエラー表示 (HeroSection外で起きたエラー用) */}
+      {/* ★ 追加: 制限モーダルの配置 */}
+      <LimitModal 
+        isOpen={showLimitModal} 
+        onClose={() => setShowLimitModal(false)} 
+      />
+
+      {/* エラー表示 */}
       {error && !apiData && (
         <div className="container mx-auto px-4 mt-8">
           <div className="bg-red-50 text-red-700 p-4 rounded-lg border border-red-200 text-center max-w-2xl mx-auto">
             <p className="font-bold">⚠️ エラーが発生しました</p>
-            <p>{}</p>
+            <p>{error}</p>
           </div>
         </div>
       )}
 
-      {/* 
-        3. 実行結果表示エリア (データ取得時のみ表示)
-        HeroSectionのすぐ下に配置することで、アクションに対する結果を直感的に見せる
-      */}
+      {/* 結果表示エリア */}
       {apiData && (
         <section 
           ref={resultRef} 
@@ -142,8 +170,6 @@ export default function Home() {
         >
           <div className="container mx-auto px-4">
             <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
-              
-              {/* ヘッダー部分 */}
               <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
                 <h2 className="text-lg font-bold text-gray-700">📊 分析結果</h2>
                 <button 
@@ -155,15 +181,12 @@ export default function Home() {
               </div>
 
               <div className="p-6 md:p-8 space-y-8">
-                {/* A. 検索コンポーネント (AI Search) */}
                 {apiData.status === 'success' && apiData.comments && (
                   <CommentSearch
                     comments={apiData.comments}
                     onSearchResult={handleSearchResult} 
                   />
                 )}
-
-                {/* B. 結果表示コンポーネント (List Display) */}
                 <CommentDisplay 
                   apiData={apiData} 
                   searchResultJson={searchResult}
@@ -174,20 +197,9 @@ export default function Home() {
         </section>
       )}
 
-      {/* 4. 特徴 & ワークフロー紹介 */}
-      <div id="features">
-        <FeaturesAndWorkflow />
-      </div>
-
-      {/* 5. ユースケース (タブ) */}
-      <div id="usecases">
-        <UseCaseTabs />
-      </div>
-
-      {/* 6. 信頼性・口コミ */}
+      <div id="features"><FeaturesAndWorkflow /></div>
+      <div id="usecases"><UseCaseTabs /></div>
       <TestimonialsSection />
-
-      {/* 7. フッター */}
       <Footer />
     </div>
   );

@@ -33,7 +33,7 @@ export const HeroSection = ({ onFetch, loading }) => {
       return;
     }
 
-    // 3. 親コンポーネントへ通知 (ローディング開始は親側で管理)
+    // 3. 親コンポーネントへ通知 (制限チェックは親で行う)
     onFetch(videoId);
   };
 
@@ -51,7 +51,6 @@ export const HeroSection = ({ onFetch, loading }) => {
         {/* === 左側: キャッチコピー & アクションカード === */}
         <div className="w-full md:w-1/2 z-10 flex flex-col gap-8">
           
-          {/* 見出しエリア */}
           <div className="space-y-4">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight tracking-tight">
               YouTubeのコメントを<br />
@@ -65,11 +64,10 @@ export const HeroSection = ({ onFetch, loading }) => {
             </p>
           </div>
 
-          {/* 入力アクションカード (remove.bgのアップロードエリア風) */}
+          {/* 入力アクションカード (見た目を維持) */}
           <div className="bg-white p-2 rounded-2xl shadow-xl border border-gray-100 transform transition-all hover:shadow-2xl">
             <div className="relative flex flex-col sm:flex-row gap-2 p-2">
               
-              {/* テキスト入力欄 */}
               <div className="relative flex-grow">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -87,14 +85,13 @@ export const HeroSection = ({ onFetch, loading }) => {
                   value={inputUrl}
                   onChange={(e) => {
                     setInputUrl(e.target.value);
-                    if (localError) setLocalError(null); // 入力したらエラーを消す
+                    if (localError) setLocalError(null);
                   }}
                   onKeyDown={handleKeyDown}
                   disabled={loading}
                 />
               </div>
 
-              {/* 実行ボタン */}
               <button
                 onClick={handleFetchClick}
                 disabled={loading}
@@ -123,7 +120,6 @@ export const HeroSection = ({ onFetch, loading }) => {
               </button>
             </div>
 
-            {/* エラーメッセージ表示エリア */}
             {localError && (
               <div className="px-4 pb-3 pt-1">
                 <p className="text-red-500 text-sm font-medium flex items-center">
@@ -141,59 +137,58 @@ export const HeroSection = ({ onFetch, loading }) => {
           </div>
 
           <div className="flex gap-4 text-sm text-gray-500 font-medium">
-             <span>✨ Gemini Pro搭載</span>
-             <span>🔒 安全なAPI接続</span>
-             <span>🚀 ログイン不要</span>
+            <span>✨ Gemini Pro搭載</span>
+            <span>🔒 安全なAPI接続</span>
+            <span>🚀 ログイン不要</span>
           </div>
         </div>
 
-        {/* === 右側: ビジュアルエリア (動画 -> 分析のメタファー) === */}
+        {/* === 右側: ビジュアルエリア (変更なし) === */}
         <div className="w-full md:w-1/2 relative hidden md:block">
            {/* 背景の装飾円 */}
-           <div className="absolute top-0 right-0 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-50 -z-10 animate-pulse"></div>
-
-           <div className="relative w-full aspect-video bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-50 -z-10 animate-pulse"></div>
+          <div className="relative w-full aspect-video bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col">
               {/* ブラウザ風ヘッダー */}
-              <div className="bg-gray-100 h-8 border-b flex items-center px-4 space-x-2">
-                <div className="w-3 h-3 rounded-full bg-red-400"></div>
-                <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-                <div className="w-3 h-3 rounded-full bg-green-400"></div>
-              </div>
+            <div className="bg-gray-100 h-8 border-b flex items-center px-4 space-x-2">
+              <div className="w-3 h-3 rounded-full bg-red-400"></div>
+              <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
+              <div className="w-3 h-3 rounded-full bg-green-400"></div>
+            </div>
 
               {/* コンテンツエリア: 動画が解析されているイメージ */}
-              <div className="flex-grow p-6 flex items-center justify-center relative">
+            <div className="flex-grow p-6 flex items-center justify-center relative">
                  {/* 左: YouTube動画っぽい要素 */}
-                 <div className="w-32 h-20 bg-red-500 rounded-lg shadow-lg flex items-center justify-center transform -rotate-6 z-10">
-                    <div className="w-0 h-0 border-t-[8px] border-t-transparent border-l-[14px] border-l-white border-b-[8px] border-b-transparent ml-1"></div>
-                 </div>
+              <div className="w-32 h-20 bg-red-500 rounded-lg shadow-lg flex items-center justify-center transform -rotate-6 z-10">
+                <div className="w-0 h-0 border-t-[8px] border-t-transparent border-l-[14px] border-l-white border-b-[8px] border-b-transparent ml-1"></div>
+              </div>
 
                  {/* 中央: 矢印とAIアイコン */}
-                 <div className="mx-4 text-blue-500 flex flex-col items-center z-20">
-                    <div className="bg-white p-2 rounded-full shadow-md mb-2">
-                        <span className="text-xl">✨</span>
-                    </div>
-                    <svg className="w-8 h-8 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                 </div>
+              <div className="mx-4 text-blue-500 flex flex-col items-center z-20">
+                <div className="bg-white p-2 rounded-full shadow-md mb-2">
+                  <span className="text-xl">✨</span>
+                </div>
+                <svg className="w-8 h-8 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </div>
 
                  {/* 右: データ/グラフ要素 */}
-                 <div className="w-36 h-40 bg-white border border-gray-200 rounded-lg shadow-lg flex flex-col p-2 transform rotate-3 z-10 space-y-2">
-                    <div className="h-2 w-1/2 bg-gray-200 rounded"></div>
-                    <div className="flex items-end gap-1 h-20 pb-2 border-b border-gray-100">
-                       <div className="w-1/4 bg-blue-200 h-[40%] rounded-t"></div>
-                       <div className="w-1/4 bg-blue-400 h-[80%] rounded-t"></div>
-                       <div className="w-1/4 bg-blue-300 h-[60%] rounded-t"></div>
-                       <div className="w-1/4 bg-blue-500 h-[100%] rounded-t"></div>
-                    </div>
-                    <div className="space-y-1">
-                       <div className="h-1.5 w-full bg-gray-100 rounded"></div>
-                       <div className="h-1.5 w-5/6 bg-gray-100 rounded"></div>
-                       <div className="h-1.5 w-4/6 bg-gray-100 rounded"></div>
-                    </div>
-                 </div>
+              <div className="w-36 h-40 bg-white border border-gray-200 rounded-lg shadow-lg flex flex-col p-2 transform rotate-3 z-10 space-y-2">
+                <div className="h-2 w-1/2 bg-gray-200 rounded"></div>
+                <div className="flex items-end gap-1 h-20 pb-2 border-b border-gray-100">
+                  <div className="w-1/4 bg-blue-200 h-[40%] rounded-t"></div>
+                  <div className="w-1/4 bg-blue-400 h-[80%] rounded-t"></div>
+                  <div className="w-1/4 bg-blue-300 h-[60%] rounded-t"></div>
+                  <div className="w-1/4 bg-blue-500 h-[100%] rounded-t"></div>
+                </div>
+                <div className="space-y-1">
+                  <div className="h-1.5 w-full bg-gray-100 rounded"></div>
+                  <div className="h-1.5 w-5/6 bg-gray-100 rounded"></div>
+                  <div className="h-1.5 w-4/6 bg-gray-100 rounded"></div>
+                </div>
               </div>
-           </div>
+            </div>
+          </div>
         </div>
 
       </div>

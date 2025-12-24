@@ -10,3 +10,4 @@ authlib
 itsdangerous
 python-jose[cryptography]
 httpx
+firebase-admin
