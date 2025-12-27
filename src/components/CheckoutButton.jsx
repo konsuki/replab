@@ -40,7 +40,7 @@ export default function CheckoutButton() {
         loading ? 'opacity-50 cursor-not-allowed' : ''
       }`}
     >
-      {loading ? '処理中...' : '今すぐPro版を購入する (¥3,980)'}
+      {loading ? '処理中...' : '30日間無料で試す (その後 ¥890/月)'}
     </button>
   );
 }
