@@ -45,7 +45,7 @@ genai.configure(api_key=GEMINI_API_KEY)
 # --- Stripe Setup ---
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_PRICE_ID = os.getenv("STRIPE_PRICE_ID")
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000/my-gh-pages-test")
+FRONTEND_URL = os.getenv("FRONTEND_URL")
 
 if not STRIPE_SECRET_KEY:
     print("Warning: STRIPE_SECRET_KEY is not set in .env file.")
