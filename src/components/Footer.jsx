@@ -17,9 +17,9 @@ export const Footer = () => {
           <div>
             <h4 className="font-bold mb-4 text-gray-100">Product</h4>
             <ul className="text-gray-400 text-sm space-y-2">
-              <li><Link href="/LP#features" className="hover:text-white transition-colors">機能一覧</Link></li>
+              <li><Link href="/#features" className="hover:text-white transition-colors">機能一覧</Link></li>
               <li><a href="#" className="hover:text-white transition-colors">APIドキュメント</a></li>
-              <li><Link href="/LP#pricing" className="hover:text-white transition-colors">料金プラン</Link></li>
+              <li><Link href="/#pricing" className="hover:text-white transition-colors">料金プラン</Link></li>
             </ul>
           </div>
 
