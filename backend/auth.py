@@ -9,7 +9,7 @@ from authlib.integrations.starlette_client import OAuth
 from jose import jwt
 from dotenv import load_dotenv
 
-# ★ Firebase関連のインポートを追加
+# ★ Firebase関連
 import firebase_admin
 from firebase_admin import credentials, firestore
 
@@ -23,12 +23,11 @@ ALGORITHM = os.getenv("ALGORITHM", "HS256")
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
 BACKEND_BASE_URL = os.getenv("BACKEND_BASE_URL", "http://localhost:8000")
 
-# JWTの有効期限（これが「セッション継続時間」になります）
-# ここでは30日間に設定
+# JWTの有効期限（セッション継続時間）
 ACCESS_TOKEN_EXPIRE_DAYS = 30
 
-# --- ★ Firebase (Firestore) Setup ---
-# api.py と同様に初期化を行いますが、二重初期化を防ぐチェックを入れます
+# --- Firebase (Firestore) Setup ---
+# api.py と同様に二重初期化を防ぐ
 if not firebase_admin._apps:
     try:
         # serviceAccountKey.json が backend ディレクトリにある前提
@@ -82,7 +81,8 @@ async def login(request: Request):
 async def auth_callback(request: Request):
     """
     3. Google認証完了後、Googleからここにリダイレクトされる
-    4. ユーザー情報を取得し、DBに保存し、JWTを発行してフロントエンドに戻す
+    4. ユーザー情報を取得し、初期化済みの完全なデータとしてDBに保存
+    5. JWTを発行してフロントエンドに戻す
     """
     try:
         token = await oauth.google.authorize_access_token(request)
@@ -94,30 +94,43 @@ async def auth_callback(request: Request):
         # GoogleユーザーID
         google_sub = user_info["sub"]
         
-        # --- ★ ここでDBへのユーザー登録/更新処理を行う ---
+        # --- DBへの登録処理 (修正済み) ---
         try:
             user_ref = db.collection("users").document(google_sub)
+            doc = user_ref.get()
             
-            # set(..., merge=True) を使うことで、
-            # - ユーザーがいなければ作成
-            # - 既にいれば指定したフィールドだけ更新（既存の is_pro や usage_count は消えない）
-            user_ref.set({
+            # 常に更新したい基本プロフィール情報
+            base_data = {
                 "email": user_info.get("email"),
                 "name": user_info.get("name"),
                 "picture": user_info.get("picture"),
                 "last_login": firestore.SERVER_TIMESTAMP,
-                # 初回作成時のみデフォルト値を入れたい場合は、doc.exists チェックが必要ですが、
-                # ここでは merge=True なので、is_proなどは既存の値が維持されます。
-                # もし初回のみ設定したい値がある場合は別途ロジックが必要ですが、
-                # 基本的なプロフィール同期はこれでOKです。
-            }, merge=True)
-            
-            print(f"User synced to Firestore: {google_sub}")
+            }
+
+            if not doc.exists:
+                # 【新規ユーザーの場合】
+                # is_pro や usage_count など、アプリ動作に必要な初期値を含めて作成する
+                print(f"Creating NEW user: {google_sub}")
+                
+                new_user_data = base_data.copy()
+                new_user_data.update({
+                    "is_pro": False,          # ★ 最初は無料会員
+                    "usage_count": 0,         # ★ 使用回数0
+                    "created_at": firestore.SERVER_TIMESTAMP,
+                    "updated_at": firestore.SERVER_TIMESTAMP,
+                    "stripe_customer_id": None
+                })
+                
+                user_ref.set(new_user_data)
+            else:
+                # 【既存ユーザーの場合】
+                # is_pro などの重要なフラグは上書きせず、プロフィールとログイン日時だけ更新する
+                print(f"Updating EXISTING user: {google_sub}")
+                user_ref.set(base_data, merge=True)
 
         except Exception as db_e:
             print(f"Database Save Error: {db_e}")
-            # DB保存に失敗してもログイン自体は止めない（ログだけ出す）方針
-            # 厳密にするならここでエラーにしても良い
+            # エラー時もログイン自体は許可する方針（ログだけ出力）
 
         # --- JWTの生成 ---
         access_token_expires = timedelta(days=ACCESS_TOKEN_EXPIRE_DAYS)
@@ -137,4 +150,5 @@ async def auth_callback(request: Request):
 
     except Exception as e:
         print(f"Auth Error: {e}")
+        # エラー時はフロントエンドのトップなどに戻す
         return RedirectResponse(url=f"{FRONTEND_URL}/?error=auth_failed")
