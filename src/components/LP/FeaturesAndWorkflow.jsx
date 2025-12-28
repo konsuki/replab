@@ -1,35 +1,14 @@
 'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion'; // ★追加
 
-/**
- * 共通スタイルとアニメーション定義
- * Tailwindのconfig設定なしで動作するようにstyleタグを埋め込んでいます
+/** 
+ * スタイル定義
+ * アニメーション定義は削除し、テキストグラデーションのみ残しています
  */
 const GlobalStyles = () => (
   <style jsx global>{`
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    .animate-fade-in-up {
-      animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-      opacity: 0; /* 初期状態は非表示 */
-    }
-    /* 遅延クラス */
-    .delay-0 { animation-delay: 0ms; }
-    .delay-100 { animation-delay: 100ms; }
-    .delay-200 { animation-delay: 200ms; }
-    .delay-300 { animation-delay: 300ms; }
-    .delay-400 { animation-delay: 400ms; }
-    .delay-500 { animation-delay: 500ms; }
-    
     /* テキストグラデーション用ユーティリティ */
     .text-gradient-warm {
       background: linear-gradient(to right, #FFC400, #FF9100, #DD2C00);
@@ -41,14 +20,35 @@ const GlobalStyles = () => (
   `}</style>
 );
 
+// --- 共通アニメーション設定 ---
+// フェードインアップの動きを定義
+const fadeInUpVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (delay = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { 
+      duration: 0.8, 
+      delay: delay, // 個別の遅延を受け取る
+      ease: [0.16, 1, 0.3, 1] // 元のCSSと同じイージング
+    }
+  })
+};
+
 // --- サブコンポーネント: 技術スタックのアイコンカード ---
 const TechCard = ({ icon, label, color, delay }) => (
-  <div 
-    className={`aspect-square bg-white/80 backdrop-blur-md rounded-xl shadow-sm border border-orange-100 flex flex-col items-center justify-center gap-2 transition-all hover:-translate-y-1 hover:shadow-lg cursor-default animate-fade-in-up ${delay}`}
+  <motion.div 
+    // ★ motion.div に変更し、propsでアニメーション制御
+    variants={fadeInUpVariants}
+    initial="hidden"
+    whileInView="visible"
+    viewport={{ once: true, margin: "-50px" }} // 視界に入って少ししてから発火、一度だけ実行
+    custom={delay} // delayをvariantsに渡す
+    className={`aspect-square bg-white/80 backdrop-blur-md rounded-xl shadow-sm border border-orange-100 flex flex-col items-center justify-center gap-2 transition-all hover:-translate-y-1 hover:shadow-lg cursor-default`}
   >
     <div className={`text-3xl ${color}`}>{icon}</div>
     <span className="text-xs font-bold text-gray-500">{label}</span>
-  </div>
+  </motion.div>
 );
 
 export const FeaturesAndWorkflow = () => {
@@ -68,12 +68,18 @@ export const FeaturesAndWorkflow = () => {
       
       {/* ===========================================
           3. 品質・機能紹介エリア (Features)
-          Warm Energy Theme: 背景をごく薄いオレンジに変更
          =========================================== */}
-      <section className="py-20 md:py-32">
+      <section className="py-20 md:py-32 overflow-hidden">
         <div className="container mx-auto px-4">
           
-          <div className="text-center mb-16 animate-fade-in-up delay-0">
+          {/* タイトル部分 */}
+          <motion.div 
+            className="text-center mb-16"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeInUpVariants}
+          >
             <h2 className="text-3xl md:text-4xl font-extrabold mb-4 text-gradient-warm inline-block">
               かなり自然な検索
             </h2>
@@ -81,12 +87,19 @@ export const FeaturesAndWorkflow = () => {
               単なるキーワード一致ではありません。<br className="hidden md:inline"/>
               Gemini AIが文脈を読み解き、コメントを見つけやすくします。
             </p>
-          </div>
+          </motion.div>
 
           <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-20">
             
             {/* 左側: ビジュアル (AI検索のイメージデモ) */}
-            <div className="w-full md:w-1/2 relative">
+            <motion.div 
+              className="w-full md:w-1/2 relative"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={fadeInUpVariants}
+              custom={0.2} // 0.2秒遅延
+            >
               {/* 装飾的な背景 */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-blue-50 to-indigo-50 rounded-full blur-3xl -z-10 opacity-60"></div>
 
@@ -115,10 +128,10 @@ export const FeaturesAndWorkflow = () => {
                       <span className="text-green-500 flex items-center gap-1">
                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
                        Context Match
-                     </span>
+                      </span>
                    </div>
                    
-                   {/* 結果カード1: ネガティブ抽出 */}
+                   {/* 結果カード1 */}
                    <div className="bg-red-50 rounded-lg p-3 border-l-4 border-red-400 mb-3">
                      <p className="text-sm text-gray-800">
                        "...内容は良いけど、<span className="font-bold bg-yellow-200/80 px-1 rounded">BGMが大きすぎて</span>声が聞き取りづらい箇所があります..."
@@ -126,7 +139,7 @@ export const FeaturesAndWorkflow = () => {
                      <div className="mt-2 text-xs text-orange-400 text-right">- User A (2:30付近)</div>
                    </div>
 
-                   {/* 結果カード2: 別の視点 */}
+                   {/* 結果カード2 */}
                    <div className="bg-red-50 rounded-lg p-3 border-l-4 border-red-400">
                      <p className="text-sm text-gray-800">
                        "...<span className="font-bold bg-yellow-200/80 px-1 rounded">結論を先に言わない</span>ので、前半で離脱しそうになった..."
@@ -139,10 +152,17 @@ export const FeaturesAndWorkflow = () => {
                   "欠点"という単語がなくても抽出！
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* 右側: テキスト説明 */}
-            <div className="w-full md:w-1/2 text-left space-y-6 animate-fade-in-up delay-200">
+            <motion.div 
+              className="w-full md:w-1/2 text-left space-y-6"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={fadeInUpVariants}
+              custom={0.4} // 0.4秒遅延
+            >
               <h3 className="text-2xl font-bold text-gray-900 leading-snug">
                 膨大なコメントの海から、<br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">知りたい情報・感情</span>を見つけ出す。
@@ -166,7 +186,7 @@ export const FeaturesAndWorkflow = () => {
                   </svg>
                 </a>
               </div>
-            </div>
+            </motion.div>
 
           </div>
         </div>
@@ -174,25 +194,35 @@ export const FeaturesAndWorkflow = () => {
 
       {/* ===========================================
           5. ワークフロー統合エリア (Workflow)
-          Glassmorphism & Staggered Animation
          =========================================== */}
-      <section id="workflow-section" className="py-20 bg-orange-50/30 border-t border-orange-100">
+      <section id="workflow-section" className="py-20 bg-orange-50/30 border-t border-orange-100 overflow-hidden">
         <div className="container mx-auto px-4 flex flex-col md:flex-row-reverse items-center gap-12 lg:gap-20">
           
-          {/* 右側 (グリッド): 技術スタックアイコン (Staggered Fade-In) */}
+          {/* 右側 (グリッド): 技術スタックアイコン */}
           <div className="w-full md:w-1/2">
              <div className="grid grid-cols-3 gap-4 md:gap-6 max-w-md mx-auto">
-                <TechCard icon="⚡" label="FastAPI" color="text-teal-500" delay="delay-100" />
-                <TechCard icon="⚛️" label="React" color="text-blue-400" delay="delay-200" />
-                <TechCard icon="✨" label="Gemini" color="text-purple-500" delay="delay-300" />
-                <TechCard icon="📺" label="YouTube" color="text-red-600" delay="delay-200" />
-                <TechCard icon="🐍" label="Python" color="text-yellow-500" delay="delay-300" />
-                <TechCard icon="📄" label="JSON/CSV" color="text-gray-600" delay="delay-400" />
+                {/* 
+                   TechCard内で個別スクロール検知を行うため、
+                   個別のdelay時間を数値(秒)で渡します 
+                */}
+                <TechCard icon="⚡" label="FastAPI" color="text-teal-500" delay={0.1} />
+                <TechCard icon="⚛️" label="React" color="text-blue-400" delay={0.2} />
+                <TechCard icon="✨" label="Gemini" color="text-purple-500" delay={0.3} />
+                <TechCard icon="📺" label="YouTube" color="text-red-600" delay={0.2} />
+                <TechCard icon="🐍" label="Python" color="text-yellow-500" delay={0.3} />
+                <TechCard icon="📄" label="JSON/CSV" color="text-gray-600" delay={0.4} />
              </div>
           </div>
 
           {/* 左側: テキスト説明 */}
-          <div className="w-full md:w-1/2 animate-fade-in-up delay-100">
+          <motion.div 
+            className="w-full md:w-1/2"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeInUpVariants}
+            custom={0.2}
+          >
             <h2 className="text-3xl font-bold text-gray-900 mb-6">
               既存のワークフローに<br/>
               <span className="text-gradient-warm">スムーズに統合</span>
@@ -222,7 +252,7 @@ export const FeaturesAndWorkflow = () => {
                 href="http://localhost:8000/docs" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full  text-white font-bold hover:shadow-lg hover:shadow-orange-500/30 transition-all hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-orange-400 to-red-500 text-white font-bold hover:shadow-lg hover:shadow-orange-500/30 transition-all hover:-translate-y-0.5"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
@@ -230,7 +260,7 @@ export const FeaturesAndWorkflow = () => {
                 APIドキュメントを見る
               </a>
             </div>
-          </div>
+          </motion.div>
 
         </div>
       </section>
