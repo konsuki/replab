@@ -1,4 +1,5 @@
-'use client'; // 必須
+// src/components/CheckoutButton.jsx
+'use client'; 
 
 import React, { useState } from 'react';
 
@@ -8,14 +9,33 @@ export default function CheckoutButton() {
   const handleCheckout = async () => {
     setLoading(true);
     try {
-      // FastAPIのエンドポイントを指定
-      // ※開発環境のポート(8000)に合わせてください
-      const response = await fetch('http://localhost:8000/api/create-checkout-session', {
+      // ★ 1. ローカルストレージからトークンを取得
+      const token = localStorage.getItem('accessToken');
+      
+      if (!token) {
+        alert('ログインが必要です。');
+        setLoading(false);
+        return;
+      }
+
+      // 開発環境と本番環境でURLを切り替えるための環境変数があれば使う
+      // なければ直接指定（開発中は localhost:8000）
+      const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+      const response = await fetch(`${API_BASE}/api/create-checkout-session`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          // ★ 2. 認証ヘッダーを追加
+          'Authorization': `Bearer ${token}`
         },
       });
+
+      if (response.status === 401) {
+        alert('セッションが切れました。再ログインしてください。');
+        setLoading(false);
+        return;
+      }
       
       const data = await response.json();
 

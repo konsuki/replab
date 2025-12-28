@@ -7,6 +7,7 @@ from fastapi import (
     Depends,
     Header,
     status,
+    Request,
 )  # ★ Depends, Header, status を追加
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
@@ -46,6 +47,7 @@ genai.configure(api_key=GEMINI_API_KEY)
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_PRICE_ID = os.getenv("STRIPE_PRICE_ID")
 FRONTEND_URL = os.getenv("FRONTEND_URL")
+STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
 
 if not STRIPE_SECRET_KEY:
     print("Warning: STRIPE_SECRET_KEY is not set in .env file.")
@@ -267,21 +269,150 @@ async def search_comments_with_gemini(request: SearchRequest) -> Dict[str, Any]:
 
 
 @app.post("/api/create-checkout-session")
-async def create_checkout_session():
-    # (既存のコードのまま)
+async def create_checkout_session(
+    # ★ 変更点1: 認証依存関係を追加して、リクエストしたユーザーのIDを取得する
+    # これにより、ログインしていないユーザーはこのAPIを叩くと 401 エラーになります
+    user_id: str = Depends(get_current_user),
+):
+    # Stripeの設定確認
     if not STRIPE_SECRET_KEY or not STRIPE_PRICE_ID:
         raise HTTPException(status_code=500, detail="Stripe configuration error.")
 
     try:
+        # Stripe Checkout Session の作成
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=["card"],
+            # 定期課金のアイテム設定
             line_items=[{"price": STRIPE_PRICE_ID, "quantity": 1}],
-            mode="payment",
-            success_url=f"{FRONTEND_URL}/success",
+            # ★ 変更点2: サブスクリプションモードに変更し、トライアルを設定
+            mode="subscription",
+            subscription_data={
+                "trial_period_days": 30,  # 30日間の無料トライアル
+            },
+            # 完了・キャンセル時のリダイレクトURL
+            success_url=f"{FRONTEND_URL}/success?session_id={{CHECKOUT_SESSION_ID}}",
             cancel_url=f"{FRONTEND_URL}/",
+            # ★ 変更点3: Webhook側でユーザーを特定するために user_id を埋め込む
+            metadata={"user_id": user_id},
         )
         return {"url": checkout_session.url}
 
     except Exception as e:
         print(f"Stripe Error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/webhook")
+async def stripe_webhook(request: Request, stripe_signature: str = Header(None)):
+    """
+    Stripeからのイベント通知を受け取るエンドポイント
+    1. 署名を検証 (なりすまし防止)
+    2. イベントタイプに応じてDBを更新
+    """
+
+    # 1. リクエストボディ（バイナリ）を取得
+    payload = await request.body()
+
+    if not STRIPE_WEBHOOK_SECRET:
+        print("Error: STRIPE_WEBHOOK_SECRET is not set.")
+        raise HTTPException(
+            status_code=500, detail="Webhook Secret configuration error"
+        )
+
+    try:
+        # 2. Stripeライブラリを使って署名を検証
+        event = stripe.Webhook.construct_event(
+            payload, stripe_signature, STRIPE_WEBHOOK_SECRET
+        )
+    except ValueError as e:
+        # ペイロードが無効
+        print("Error: Invalid payload")
+        raise HTTPException(status_code=400, detail="Invalid payload")
+    except stripe.error.SignatureVerificationError as e:
+        # 署名が無効
+        print("Error: Invalid signature")
+        raise HTTPException(status_code=400, detail="Invalid signature")
+
+    # --- イベントごとの処理分岐 ---
+    event_type = event["type"]
+    data_object = event["data"]["object"]
+
+    print(f"Received Webhook Event: {event_type}")
+
+    # ====================================================
+    # ケースA: 決済完了 / トライアル開始 (checkout.session.completed)
+    # ====================================================
+    if event_type == "checkout.session.completed":
+        # create_checkout_session で埋め込んだ metadata を取得
+        user_id = data_object.get("metadata", {}).get("user_id")
+        stripe_customer_id = data_object.get("customer")  # Stripeの顧客ID
+
+        if user_id:
+            print(f"✅ Subscription started for User: {user_id}")
+
+            try:
+                # Firestoreのユーザー情報を更新
+                user_ref = db.collection("users").document(user_id)
+                user_ref.set(
+                    {
+                        "is_pro": True,  # ★ ProフラグをON
+                        "stripe_customer_id": stripe_customer_id,  # ★ 解約時に使うため保存
+                        "updated_at": firestore.SERVER_TIMESTAMP,
+                    },
+                    merge=True,
+                )
+
+            except Exception as e:
+                print(f"❌ DB Update Error (Checkout): {e}")
+                # Stripeには200を返さないと再送され続けるが、DBエラーはログに残す
+                return JSONResponse(status_code=500, content={"error": str(e)})
+        else:
+            print("⚠️ User ID not found in session metadata.")
+
+    # ====================================================
+    # ケースB: サブスクリプションの解約 / 期限切れ (customer.subscription.deleted)
+    # ====================================================
+    elif event_type == "customer.subscription.deleted":
+        # 解約されたStripe顧客IDを取得
+        stripe_customer_id = data_object.get("customer")
+
+        print(f"🚫 Subscription deleted for Customer: {stripe_customer_id}")
+
+        if stripe_customer_id:
+            try:
+                # Stripe顧客IDからFirestore上のユーザーを逆引き検索
+                # ※ 'stripe_customer_id' フィールドが一致するユーザーを探す
+                users_ref = db.collection("users")
+                query = users_ref.where(
+                    filter=FieldFilter("stripe_customer_id", "==", stripe_customer_id)
+                )
+                results = query.stream()
+
+                found_user = False
+                for user_doc in results:
+                    found_user = True
+                    print(f"Found user to downgrade: {user_doc.id}")
+
+                    # ProフラグをOFFに戻す
+                    user_doc.reference.update(
+                        {"is_pro": False, "updated_at": firestore.SERVER_TIMESTAMP}
+                    )
+
+                if not found_user:
+                    print(
+                        f"⚠️ No user found with Stripe Customer ID: {stripe_customer_id}"
+                    )
+
+            except Exception as e:
+                print(f"❌ DB Update Error (Deletion): {e}")
+
+    # ====================================================
+    # ケースC: 支払いの失敗など (invoice.payment_failed)
+    # ※ 必要であればここで利用停止処理などを書く
+    # ====================================================
+    elif event_type == "invoice.payment_failed":
+        print(f"⚠️ Payment failed for Customer: {data_object.get('customer')}")
+        # ここでユーザーにメール通知を送るなどの処理が可能
+
+    # 処理完了 (Stripeに 200 OK を返す)
+    return {"status": "success"}
