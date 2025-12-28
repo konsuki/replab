@@ -90,7 +90,7 @@ export const Header = () => {
         <Link href="/" className="flex items-center gap-2 font-bold text-xl text-gray-800 hover:opacity-80 transition">
           {/* ▼▼▼ 修正: 青背景から赤〜オレンジのグラデーションへ変更 ▼▼▼ */}
           <span className="bg-gradient-to-r from-orange-500 to-red-600 text-white px-2 py-1 rounded text-sm">AI</span>
-          <span>リプラボ</span>
+          <span>Replab</span>
         </Link>
 
         {/* ナビゲーション (PC) */}
@@ -107,11 +107,7 @@ export const Header = () => {
           {isLoggedIn ? (
             // === ログイン中の表示 ===
             <div className="flex items-center gap-4">
-              {/* ▼▼▼ 修正: Pro Planバッジの色変更 ▼▼▼ */}
-              <button className="hidden sm:block text-xs font-bold text-red-600 border border-red-600 px-3 py-1.5 rounded-full hover:bg-red-50 transition">
-                Pro Plan
-              </button>
-
+              <CheckoutButton/>
               <div className="relative" ref={menuRef}>
                 {/* アイコンボタン */}
                 <button 
@@ -174,7 +170,6 @@ export const Header = () => {
                   </div>
                 )}
               </div>
-              <CheckoutButton/>
             </div>
           ) : (
             // === 未ログイン時の表示 ===
@@ -187,7 +182,7 @@ export const Header = () => {
               <Link href="/auth/signin">
                 {/* ▼▼▼ 修正: 登録ボタンを赤系に変更（黒のままでも良いですが、赤システムに合わせました） ▼▼▼ */}
                 <button className="text-sm font-bold bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition shadow-md hover:shadow-lg">
-                  登録する
+                  無料で始める
                 </button>
               </Link>
             </div>

@@ -163,9 +163,9 @@ export const FeaturesAndWorkflow = () => {
               variants={fadeInUpVariants}
               custom={0.4} // 0.4秒遅延
             >
-              <h3 className="text-2xl font-bold text-gray-900 leading-snug">
+              <h3 className="text-2xl font-bold text-gray-900 leading-snug" style={{ color: 'rgb(0 0 0 / 60%)' }}>
                 膨大なコメントの海から、<br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">知りたい情報・感情</span>を見つけ出す。
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600" >知りたい情報・感情</span>を見つけ出す。
               </h3>
               <p className="text-gray-600 leading-relaxed">
                 従来の検索機能では、「欠点」と検索しても「〇〇が欠点だと思う」のようなコメントしか検索できませんでした。<br /><br />

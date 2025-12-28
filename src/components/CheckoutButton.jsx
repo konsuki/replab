@@ -104,12 +104,9 @@ export default function CheckoutButton() {
   if (isPro) {
     // ボタンの代わりにバッジを表示
     return (
-      <div className="flex items-center gap-2 text-green-600 font-bold border border-green-600 px-6 py-3 rounded-full bg-green-50 shadow-sm cursor-default select-none">
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-        </svg>
-        Pro Plan Active
-      </div>
+      <button className="hidden sm:block text-xs font-bold text-red-600 border border-red-600 px-3 py-1.5 rounded-full hover:bg-red-50 transition">
+                Pro Plan
+              </button>
     );
     // ※ もし完全に消したい場合は return null; に書き換えてください
   }

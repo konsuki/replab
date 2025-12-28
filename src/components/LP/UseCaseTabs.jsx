@@ -66,7 +66,7 @@ export const UseCaseTabs = () => {
         
         {/* ヘッダー */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4" style={{ color: 'rgb(0 0 0 / 60%)' }}>
             創造力と効率性をアップ！
           </h2>
           <p className="text-gray-500">
@@ -82,11 +82,11 @@ export const UseCaseTabs = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`
                 px-6 py-3 rounded-full text-sm md:text-base font-bold transition-all duration-200 border
-                flex items-center gap-2
+                flex items-center gap-2 cursor-pointer 
                 ${activeTab === tab.id 
                   ? 'bg-gray-900 text-white border-gray-900 shadow-lg transform scale-105' 
                   : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50 hover:border-gray-400'
-                }
+                } 
               `}
             >
               <span>{tab.icon}</span>
@@ -112,7 +112,7 @@ export const UseCaseTabs = () => {
               
               {/* テキスト情報 */}
               <div className="flex-1">
-                <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+                <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4" style={{ color: 'rgb(0 0 0 / 60%)' }}>
                   {activeContent.title}
                 </h3>
                 <p className="text-gray-600 leading-relaxed mb-8">
