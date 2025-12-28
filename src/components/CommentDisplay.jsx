@@ -117,7 +117,7 @@ export const CommentDisplay = ({ apiData, searchResultJson }) => {
   }
 
   return (
-    <div className="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-2xl transition-shadow duration-300">
+    <div className="p-6 bg-white dark:bg-gray-800 rounded-xl duration-300">
       <p className="text-lg font-semibold mb-3 text-green-600 dark:text-green-400">
         ✅ YouTubeデータ受信成功
       </p>

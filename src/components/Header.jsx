@@ -79,21 +79,27 @@ export const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 transition-all duration-300">
+    // ▼▼▼ 修正: ボーダー色を style で直接指定 ▼▼▼
+    <header 
+      className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b transition-all duration-300"
+      style={{ borderColor: 'rgb(4 30 73 / 10%)' }}
+    >
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         
         {/* ロゴエリア */}
         <Link href="/" className="flex items-center gap-2 font-bold text-xl text-gray-800 hover:opacity-80 transition">
-          <span className="bg-blue-600 text-white px-2 py-1 rounded text-sm">AI</span>
-          <span>Replab</span>
+          {/* ▼▼▼ 修正: 青背景から赤〜オレンジのグラデーションへ変更 ▼▼▼ */}
+          <span className="bg-gradient-to-r from-orange-500 to-red-600 text-white px-2 py-1 rounded text-sm">AI</span>
+          <span>リプラボ</span>
         </Link>
 
         {/* ナビゲーション (PC) */}
         <nav className="hidden md:flex gap-6 text-sm font-medium text-gray-600">
-          <Link href="/LP#features" className="hover:text-blue-600 transition">機能</Link>
-          <Link href="/LP#usecases" className="hover:text-blue-600 transition">活用事例</Link>
-          <Link href="/LP#pricing" className="hover:text-blue-600 transition">料金</Link>
-          <Link href="/blog" className="hover:text-blue-600 transition">ブログ</Link>
+          {/* ▼▼▼ 修正: ホバー時の色を赤/オレンジ系に変更 ▼▼▼ */}
+          <Link href="/LP#features" className="hover:text-red-600 transition">機能</Link>
+          <Link href="/LP#usecases" className="hover:text-red-600 transition">活用事例</Link>
+          <Link href="/LP#pricing" className="hover:text-red-600 transition">料金</Link>
+          <Link href="/blog" className="hover:text-red-600 transition">ブログ</Link>
         </nav>
 
         {/* 右側アクションエリア */}
@@ -101,19 +107,17 @@ export const Header = () => {
           {isLoggedIn ? (
             // === ログイン中の表示 ===
             <div className="flex items-center gap-4">
-              <button className="hidden sm:block text-xs font-bold text-blue-600 border border-blue-600 px-3 py-1.5 rounded-full hover:bg-blue-50 transition">
+              {/* ▼▼▼ 修正: Pro Planバッジの色変更 ▼▼▼ */}
+              <button className="hidden sm:block text-xs font-bold text-red-600 border border-red-600 px-3 py-1.5 rounded-full hover:bg-red-50 transition">
                 Pro Plan
               </button>
 
-              {/* 
-                 ユーザーアイコンとメニューを囲む親要素に ref={menuRef} を設定 
-                 ここに含まれない場所をクリックするとメニューが閉じます
-              */}
               <div className="relative" ref={menuRef}>
                 {/* アイコンボタン */}
                 <button 
                   onClick={toggleUserMenu}
-                  className="w-9 h-9 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 p-[2px] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform active:scale-95"
+                  // ▼▼▼ 修正: リングのグラデーションとフォーカス色を変更 ▼▼▼
+                  className="w-9 h-9 rounded-full bg-gradient-to-r from-yellow-400 to-red-600 p-[2px] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-transform active:scale-95"
                 >
                    <div className="w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
                      {/* Googleアイコン画像を表示 */}
@@ -125,7 +129,8 @@ export const Header = () => {
                          referrerPolicy="no-referrer"
                        />
                      ) : (
-                       <span className="font-bold text-blue-600 text-sm">U</span>
+                       // ▼▼▼ 修正: デフォルトアイコンの文字色 ▼▼▼
+                       <span className="font-bold text-red-600 text-sm">U</span>
                      )}
                    </div>
                 </button>
@@ -180,7 +185,8 @@ export const Header = () => {
                 </button>
               </Link>
               <Link href="/auth/signin">
-                <button className="text-sm font-bold bg-gray-900 text-white px-4 py-2 rounded-full hover:bg-gray-700 transition shadow-md hover:shadow-lg">
+                {/* ▼▼▼ 修正: 登録ボタンを赤系に変更（黒のままでも良いですが、赤システムに合わせました） ▼▼▼ */}
+                <button className="text-sm font-bold bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition shadow-md hover:shadow-lg">
                   登録する
                 </button>
               </Link>
