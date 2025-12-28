@@ -416,3 +416,18 @@ async def stripe_webhook(request: Request, stripe_signature: str = Header(None))
 
     # 処理完了 (Stripeに 200 OK を返す)
     return {"status": "success"}
+
+
+@app.get("/api/user/status")
+async def get_user_status(user_id: str = Depends(get_current_user)):
+    """
+    現在のユーザーがProプランかどうかを返すAPI
+    """
+    user_ref = db.collection("users").document(user_id)
+    doc = user_ref.get()
+
+    is_pro = False
+    if doc.exists:
+        is_pro = doc.to_dict().get("is_pro", False)
+
+    return {"is_pro": is_pro}
