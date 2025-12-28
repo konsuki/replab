@@ -81,7 +81,7 @@ export default function Home() {
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-2xl">🚀</span>
-            <span className="font-bold text-lg tracking-tight">CommentAnalyzer<span className="text-blue-600">.ai</span></span>
+            <span className="font-bold text-lg tracking-tight">Replab<span className="text-blue-600">.ai</span></span>
           </div>
           <nav className="hidden md:flex gap-6 text-sm font-medium text-gray-600">
             <a href="#" className="hover:text-blue-600 transition-colors">機能</a>

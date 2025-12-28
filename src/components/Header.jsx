@@ -85,7 +85,7 @@ export const Header = () => {
         {/* ロゴエリア */}
         <Link href="/" className="flex items-center gap-2 font-bold text-xl text-gray-800 hover:opacity-80 transition">
           <span className="bg-blue-600 text-white px-2 py-1 rounded text-sm">AI</span>
-          <span>CommentAnalyzer</span>
+          <span>Replab</span>
         </Link>
 
         {/* ナビゲーション (PC) */}

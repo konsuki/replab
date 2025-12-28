@@ -32,7 +32,7 @@ export default function SignInPage() {
           <Link href="/" className="inline-block">
             <div className="flex items-center justify-center gap-2 font-bold text-2xl text-gray-800 mb-2">
               <span className="bg-blue-600 text-white px-2 py-1 rounded text-lg">AI</span>
-              <span>CommentAnalyzer</span>
+              <span>Replab</span>
             </div>
           </Link>
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">

@@ -14,8 +14,8 @@ import { CommentSearch } from '../components/CommentSearch';
 import { LimitModal } from '../components/LimitModal'; // ★ 追加: モーダル
 
 // APIエンドポイント
-const YOUTUBE_API_URL = 'http://localhost:8000/api/comments';
-// const YOUTUBE_API_URL = 'https://backend-904463184290.asia-northeast1.run.app/api/comments';
+// const YOUTUBE_API_URL = 'http://localhost:8000/api/comments';
+const YOUTUBE_API_URL = 'https://backend-904463184290.asia-northeast1.run.app/api/comments';
 
 // --- 信頼性セクション (変更なし) ---
 const TestimonialsSection = () => (
