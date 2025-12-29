@@ -96,9 +96,9 @@ export const Header = () => {
         {/* ナビゲーション (PC) */}
         <nav className="hidden md:flex gap-6 text-sm font-medium text-gray-600">
           {/* ▼▼▼ 修正: ホバー時の色を赤/オレンジ系に変更 ▼▼▼ */}
-          <Link href="/LP#features" className="hover:text-red-600 transition">機能</Link>
-          <Link href="/LP#usecases" className="hover:text-red-600 transition">活用事例</Link>
-          <Link href="/LP#pricing" className="hover:text-red-600 transition">料金</Link>
+          <Link href="/#features" className="hover:text-red-600 transition">機能</Link>
+          <Link href="/#usecases" className="hover:text-red-600 transition">活用事例</Link>
+          <Link href="/#pricing" className="hover:text-red-600 transition">料金</Link>
           <Link href="/blog" className="hover:text-red-600 transition">ブログ</Link>
         </nav>
 
