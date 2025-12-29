@@ -8,8 +8,11 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains" });
 
 export const metadata: Metadata = {
-  title: "YouTube Comment Analysis Tool | AI Powered",
-  description: "Analyze YouTube comments instantly with Gemini AI.",
+  title: "リプラボ | YouTubeコメント検索AIツール",
+  description: "YouTubeのコメントから知りたい情報を検索する事ができます。",
+  verification: {
+    google: 'Ij5m_Y0y8Ddt2MSkn8wDN8KwG1-mLp4rDOQAF9tR', 
+  },
 };
 
 export default function RootLayout({
