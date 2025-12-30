@@ -249,7 +249,7 @@ async def search_comments_with_gemini(request: SearchRequest) -> Dict[str, Any]:
         comments_string = json.dumps(comments_to_analyze, ensure_ascii=False, indent=2)
 
         prompt = f"""
-        以下の【コメント配列】の中から;、textプロパティの値に"{keyword}"に似た言葉を含むオブジェクトのみを抽出してください。
+        {keyword}はユーザーがコメント配列（動画のコメント欄を圧縮したもの）の中から情報を調べたくて入力したものです、以下の【コメント配列】の中から、その意図を汲み取り、"{keyword}"にユーザーが求めているような情報が入っているオブジェクトのみを抽出してください。
         【制約事項】
         1. 結果は抽出されたオブジェクトの配列を含むJSON文字列として、他の説明文やマークダウン( ```json 等)を付けずに**そのまま出力**してください。
         2. 抽出対象は、必ずtextプロパティにキーワードが含まれているものに限定してください。

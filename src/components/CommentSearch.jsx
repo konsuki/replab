@@ -68,7 +68,7 @@ export const CommentSearch = ({ comments, onSearchResult }) => {
   return (
     <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md mb-6">
       <h2 className="text-xl font-bold mb-3 text-gray-800 dark:text-gray-100">
-        AIキーワード検索 (Backend処理)
+        AI検索
       </h2>
       <div className="flex space-x-3">
         <input
