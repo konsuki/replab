@@ -21,7 +21,7 @@ const YOUTUBE_API_URL = 'https://backend-904463184290.asia-northeast1.run.app/ap
 // --- 信頼性セクション (変更なし) ---
 const TestimonialsSection = () => (
   <section className="container mx-auto px-4 py-20 text-center">
-    <h2 className="text-2xl font-bold mb-4">沢山の方にご愛用いただいております</h2>
+    <h2 className="text-2xl font-bold mb-4">沢山の方にご愛用いただきたいです</h2>
     <p className="text-gray-500 mb-10">あなたもきっと気に入るはず。</p>
     <div className="flex flex-col md:flex-row gap-6 justify-center max-w-5xl mx-auto">
       {[

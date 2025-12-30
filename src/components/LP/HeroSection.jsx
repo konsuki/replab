@@ -4,12 +4,12 @@ import React, { useState } from 'react';
 
 // --- モックデータ: 動画につくリアルなコメント ---
 const MOCK_COMMENTS = [
-  { id: 1, text: "3:45 のリアクション最高すぎる🤣", user: "Mike_T", color: "bg-blue-100 text-blue-600" },
+  { id: 1, text: "3:45 いやそれは二の腕すぎる🤣", user: "Mike_T", color: "bg-blue-100 text-blue-600" },
   { id: 2, text: "解説わかりやすくて助かりました！", user: "Study_99", color: "bg-green-100 text-green-600" },
-  { id: 3, text: "この視点は新しいな... 🤔", user: "Biz_User", color: "bg-purple-100 text-purple-600" },
+  { id: 3, text: "この女優さんの名前だれかたのむ... 🤔", user: "Biz_User", color: "bg-purple-100 text-purple-600" },
   { id: 4, text: "Love this video! 🔥", user: "Sarah.J", color: "bg-red-100 text-red-600" },
-  { id: 5, text: "次回は〇〇についてやってほしい", user: "Request_Fan", color: "bg-orange-100 text-orange-600" },
-  { id: 6, text: "めっちゃ共感したｗｗ", user: "Jp_Lvr", color: "bg-yellow-100 text-yellow-600" },
+  { id: 5, text: "次は「ななみ」でお願いします！！", user: "Request_Fan", color: "bg-orange-100 text-orange-600" },
+  { id: 6, text: "14:23 ここめっちゃ分かるｗｗ", user: "Jp_Lvr", color: "bg-yellow-100 text-yellow-600" },
 ];
 
 // --- ユーティリティ関数: YouTube ID抽出 ---
@@ -118,7 +118,7 @@ export const HeroSection = ({ onFetch, loading }) => {
 
             <p className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-xl">
               URLを貼るだけで、Gemini AIが数千件の声を可視化。<br />
-              視聴者の感情やトレンドを、たった5秒で把握できます。
+              視聴者の感情やトレンドを、簡単に知れます。
             </p>
           </div>
 

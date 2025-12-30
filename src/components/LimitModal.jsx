@@ -31,7 +31,7 @@ export const LimitModal = ({ isOpen, onClose }) => {
           </h3>
           <p className="text-gray-600 mb-6 text-sm">
             無料プランではコメント取得は4回までです。<br/>
-            Pro版を購入して無制限に利用しましょう。
+            無料トライアルで無制限に利用できます。
           </p>
 
           {/* 課金ボタン */}
