@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
   output: 'export',
 
   // ★ここを追加：リポジトリ名を指定（先頭に / を忘れないこと）
-  basePath: '/my-gh-pages-test',
+  basePath: '/replab',
 
   // GitHub Pages用：画像最適化サーバーを無効化
   images: {
