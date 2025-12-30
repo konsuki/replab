@@ -110,7 +110,7 @@ export const FeaturesAndWorkflow = () => {
                   <div className="text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">User Input</div>
                   <div className="bg-gray-100 rounded-lg p-3 text-gray-800 font-medium flex items-center gap-2 border border-gray-200">
                     <span className="text-blue-500">🔍</span>
-                    「この動画の<span className="text-blue-600 bg-blue-100 px-1 rounded">欠点</span>は？」
+                    「机壊してる<span className="text-blue-600 bg-blue-100 px-1 rounded">女優さんの名前</span>ってなんですか？」
                   </div>
                 </div>
 
@@ -134,7 +134,7 @@ export const FeaturesAndWorkflow = () => {
                    {/* 結果カード1 */}
                    <div className="bg-red-50 rounded-lg p-3 border-l-4 border-red-400 mb-3">
                      <p className="text-sm text-gray-800">
-                       "...内容は良いけど、<span className="font-bold bg-yellow-200/80 px-1 rounded">BGMが大きすぎて</span>声が聞き取りづらい箇所があります..."
+                       "...机壊して子って、<span className="font-bold bg-yellow-200/80 px-1 rounded">見城さやか</span>だっけ..."
                      </p>
                      <div className="mt-2 text-xs text-orange-400 text-right">- User A (2:30付近)</div>
                    </div>
@@ -142,7 +142,7 @@ export const FeaturesAndWorkflow = () => {
                    {/* 結果カード2 */}
                    <div className="bg-red-50 rounded-lg p-3 border-l-4 border-red-400">
                      <p className="text-sm text-gray-800">
-                       "...<span className="font-bold bg-yellow-200/80 px-1 rounded">結論を先に言わない</span>ので、前半で離脱しそうになった..."
+                       "...<span className="font-bold bg-yellow-200/80 px-1 rounded">見城</span>ライブとキャラ違う..."
                      </p>
                    </div>
                 </div>
