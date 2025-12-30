@@ -24,17 +24,18 @@ const TestimonialsSection = () => (
     <h2 className="text-2xl font-bold mb-4">沢山の方にご愛用いただきたいです</h2>
     <p className="text-gray-500 mb-10">あなたもきっと気に入るはず。</p>
     <div className="flex flex-col md:flex-row gap-6 justify-center max-w-5xl mx-auto">
+      {/* どんなことに使えそうかをtextに案として書く。ありきたりなものは禁止。youtube視聴者あるあるであること。 */}
       {[
         { 
-          name: "YouTuber A氏", 
-          role: "Channel Owner", 
-          text: "数千件のコメントからアンチコメントだけを抽出して対策するのに役立ちました。Geminiの精度がすごい。", 
+          name: "開発者", 
+          role: "共感コメ探し", 
+          text: "共感コメ探すのに使えそう。",
           color: "border-red-500 text-red-600" 
         },
         { 
           name: "Company B", 
-          role: "Marketing", 
-          text: "競合チャンネルの分析に使用。視聴者が何を求めているかがデータとして可視化されました。", 
+          role: "視聴者の意見分析", 
+          text: "視聴者の意見を要約できそう。", 
           color: "border-blue-500 text-blue-600" 
         }
       ].map((item, idx) => (
