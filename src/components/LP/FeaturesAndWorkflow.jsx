@@ -134,7 +134,7 @@ export const FeaturesAndWorkflow = () => {
                    {/* 結果カード1 */}
                    <div className="bg-red-50 rounded-lg p-3 border-l-4 border-red-400 mb-3">
                      <p className="text-sm text-gray-800">
-                       "...机壊して子って、<span className="font-bold bg-yellow-200/80 px-1 rounded">見城さやか</span>だっけ..."
+                       "...机破壊してんのって、<span className="font-bold bg-yellow-200/80 px-1 rounded">見城さやか</span>だっけ..."
                      </p>
                      <div className="mt-2 text-xs text-orange-400 text-right">- User A (2:30付近)</div>
                    </div>
