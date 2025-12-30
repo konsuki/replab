@@ -11,7 +11,8 @@ import { UseCaseTabs } from '../components/LP/UseCaseTabs';
 import { Footer } from '../components/Footer';
 import { CommentDisplay } from '../components/CommentDisplay';
 import { CommentSearch } from '../components/CommentSearch';
-import { LimitModal } from '../components/LimitModal'; // ★ 追加: モーダル
+import { LimitModal } from '../components/LimitModal';
+import { LoginModal } from '../components/LoginModal';
 
 // APIエンドポイント
 // const YOUTUBE_API_URL = 'http://localhost:8000/api/comments';
@@ -62,6 +63,7 @@ export default function Home() {
   
   // ★ 追加: モーダル表示管理用State
   const [showLimitModal, setShowLimitModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const resultRef = useRef(null);
 
@@ -71,16 +73,13 @@ export default function Home() {
     setApiData(null);
     setLoading(true);
     setError(null);
-    setShowLimitModal(false); // ★ リセット
+    setShowLimitModal(false);
+    setShowLoginModal(false); // ★ 追加: 実行時に一旦閉じる（念のため）
 
     try {
       // ★ トークン取得 (LPでも制限チェックのため必要)
       const token = localStorage.getItem('accessToken');
       
-      // 未ログインの場合の挙動
-      // ※ API側でログイン必須にしている場合、トークンがないと401になります。
-      // LPでの「お試し」を未ログインでもさせたい場合は、API側の修正が必要ですが、
-      // ここでは「制限機能」のためにトークンを送る実装にします。
       const headers = {
         'Content-Type': 'application/json',
       };
@@ -88,26 +87,33 @@ export default function Home() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
+      // API URLの組み立て（環境変数等を使用している場合はそのまま）
       const url = `${YOUTUBE_API_URL}?video_id=${videoId}`;
+      
       const response = await fetch(url, {
         method: 'GET',
-        headers: headers // ★ ヘッダー付与
+        headers: headers
       });
 
       // ★ 402 (Payment Required) チェック
       if (response.status === 402) {
-        setShowLimitModal(true); // モーダル表示
+        setShowLimitModal(true);
         setLoading(false);
         return;
       }
 
+      // ▼▼▼ 修正箇所ここから ▼▼▼
       // 401 (Unauthorized) チェック
       if (response.status === 401) {
-        // 未ログインまたはトークン期限切れ
-        setError("この機能を利用するにはログインが必要です。");
+        // 修正前: setError("この機能を利用するにはログインが必要です。");
+        
+        // 修正後: モーダルを表示させる
+        setShowLoginModal(true);
+        
         setLoading(false);
         return;
       }
+      // ▲▲▲ 修正箇所ここまで ▲▲▲
 
       const data = await response.json();
 
@@ -146,10 +152,16 @@ export default function Home() {
       {/* デザインはそのままで、onFetch関数を渡すだけ */}
       <HeroSection onFetch={fetchComments} loading={loading} />
 
-      {/* ★ 追加: 制限モーダルの配置 */}
+      {/* 制限モーダルの配置 */}
       <LimitModal 
         isOpen={showLimitModal} 
         onClose={() => setShowLimitModal(false)} 
+      />
+
+      {/* ログインモーダルの配置 */}
+      <LoginModal 
+        isOpen={showLoginModal} 
+        onClose={() => setShowLoginModal(false)} 
       />
 
       {/* エラー表示 */}

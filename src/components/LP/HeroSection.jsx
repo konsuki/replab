@@ -196,9 +196,9 @@ export const HeroSection = ({ onFetch, loading }) => {
 
           {/* 特徴リスト (遅延 0.2s) */}
           <div className="flex gap-4 text-sm text-gray-500 font-medium animate-fade-in-up delay-200">
-            <span>✨ Gemini Pro搭載</span>
+            <span>✨ Gemini Pro実装予定</span>
             <span>🔒 安全なAPI接続</span>
-            <span>🚀 ログイン不要</span>
+            <span>🚀 無料でも使用可</span>
           </div>
         </div>
 

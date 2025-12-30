@@ -67,7 +67,7 @@ export const UseCaseTabs = () => {
         {/* ヘッダー */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4" style={{ color: 'rgb(0 0 0 / 60%)' }}>
-            創造力と効率性をアップ！
+            コメント検索するならリプラボ
           </h2>
           <p className="text-gray-500">
             あなたの立場に合わせて、最適な使い方をご提案します。
