@@ -171,29 +171,6 @@ export const CommentDisplay = ({ apiData, searchResultJson }) => {
 
   return (
     <div className="p-6 bg-white dark:bg-gray-800 rounded-xl duration-300">
-      <p className="text-lg font-semibold mb-3 text-green-600 dark:text-green-400 flex items-center gap-2">
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-        </svg>
-        YouTubeデータ受信成功
-      </p>
-
-      {/* 1. 統計情報 */}
-      <div className="mb-8 p-4 border-l-4 border-red-600 bg-gray-50 dark:bg-gray-700/30 rounded-r-md shadow-sm flex flex-wrap gap-6 items-center">
-        <div>
-          <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-bold">コメント総数</p>
-          <p className="text-xl font-bold text-gray-800 dark:text-gray-100">
-            {totalComments !== undefined ? Number(totalComments).toLocaleString() : '-'}
-          </p>
-        </div>
-        <div>
-          <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-bold">取得済み</p>
-          <p className="text-xl font-bold text-gray-800 dark:text-gray-100">
-            {fetchedCount !== undefined ? Number(fetchedCount).toLocaleString() : '-'}
-          </p>
-        </div>
-      </div>
-
       {/* 2. AI検索結果エリア */}
       <div className="mb-10">
         <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100 flex items-center gap-2">

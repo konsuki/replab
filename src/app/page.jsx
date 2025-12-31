@@ -1,7 +1,6 @@
 // src/app/page.jsx
 'use client';
 import React, { useState, useRef } from 'react';
-import Link from 'next/link';
 
 // --- コンポーネントのインポート ---
 import { Header } from '../components/Header';
@@ -12,11 +11,13 @@ import { Footer } from '../components/Footer';
 import { CommentDisplay } from '../components/CommentDisplay';
 import { CommentSearch } from '../components/CommentSearch';
 import { LimitModal } from '../components/LimitModal';
-// ★ 追加: スケルトンコンポーネント
 import { SkeletonCommentDisplay } from '../components/SkeletonCommentDisplay';
+// ★ 追加: 動画プレーヤーコンポーネント
+import { YouTubePlayer } from '../components/YouTubePlayer';
 
 // APIエンドポイント
 const YOUTUBE_API_URL = 'https://backend-904463184290.asia-northeast1.run.app/api/comments';
+// const YOUTUBE_API_URL = 'http://localhost:8000/api/comments';
 
 // --- 信頼性セクション ---
 const TestimonialsSection = () => (
@@ -64,6 +65,8 @@ export default function Home() {
 
   const [error, setError] = useState(null);
   const [searchResult, setSearchResult] = useState(null);
+  // ★ 追加: 検索キーワード管理用 (ハイライト機能のため)
+  const [searchKeyword, setSearchKeyword] = useState('');
   
   // ページネーション用State
   const [nextPageToken, setNextPageToken] = useState(null);
@@ -73,21 +76,20 @@ export default function Home() {
 
   const resultRef = useRef(null);
 
-  
-
   // --- API取得ロジック (Optimistic UI実装) ---
   const fetchComments = async (videoId, pageToken = null) => {
     // 初回検索時
     if (!pageToken) {
         // 1. 状態をリセットし、ローディングを開始（これでスケルトンが表示される）
         setSearchResult(null);
+        setSearchKeyword(''); // キーワードもリセット
         setApiData(null);
         setNextPageToken(null);
         setError(null);
         setShowLimitModal(false);
         setLoading(true); 
 
-        // 2. ★ データ取得を待たずに、即座に結果エリアへスクロール開始
+        // 2. データ取得を待たずに、即座に結果エリアへスクロール開始
         // レンダリングサイクルを考慮してごくわずかな遅延を入れる
         setTimeout(() => {
             resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -159,14 +161,12 @@ export default function Home() {
     }
   };
 
-  // Stateにキーワードを追加
-  const [searchKeyword, setSearchKeyword] = useState('');
-
-  // handleSearchResult 関数を修正
-  const handleSearchResult = (resultData, keyword) => { // キーワードも受け取る
-      setSearchResult(resultData);
-      setSearchKeyword(keyword);
+  // 検索結果ハンドラ (キーワードも受け取るように修正)
+  const handleSearchResult = (resultData, keyword) => {
+    setSearchResult(resultData);
+    setSearchKeyword(keyword || ''); // ハイライト用にキーワードを保存
   };
+
   return (
     <div className="min-h-screen bg-white font-sans text-gray-900">
       <Header />
@@ -207,6 +207,7 @@ export default function Home() {
                   onClick={() => { 
                       setApiData(null); 
                       setLoading(false);
+                      setSearchKeyword('');
                       window.scrollTo({top:0, behavior:'smooth'}); 
                   }}
                   className="text-sm text-gray-500 hover:text-red-500"
@@ -224,16 +225,22 @@ export default function Home() {
                     <SkeletonCommentDisplay />
                 ) : (
                     <>
+                        {/* ★ 動画プレーヤー: データのvideo_idがあれば表示 */}
+                        {apiData?.video_id && (
+                          <YouTubePlayer videoId={apiData.video_id} />
+                        )}
+
                         {apiData.status === 'success' && apiData.comments && (
                           <CommentSearch 
-                              comments={apiData.comments} 
-                              onSearchResult={(data, keyword) => handleSearchResult(data, keyword)} // キーワードをバケツリレー
+                            comments={apiData.comments} 
+                            onSearchResult={handleSearchResult} 
                           />
                         )}
                         
                         <CommentDisplay 
-                          apiData={{...apiData, currentKeyword: searchKeyword}} // apiDataに混ぜるか、別propにする
-                          searchResultJson={searchResult}
+                          // キーワードをapiDataの一部として擬似的に渡す（CommentDisplay側の修正に合わせる）
+                          apiData={{ ...apiData, currentKeyword: searchKeyword }} 
+                          searchResultJson={searchResult} 
                         />
 
                         {/* 「さらに読み込む」ボタン */}
