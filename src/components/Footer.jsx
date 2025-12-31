@@ -39,11 +39,11 @@ export const Footer = () => {
             <ul className="text-gray-400 text-sm space-y-2">
               <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
               <li>
-                {/* 現在のページが '/legal' の場合のみ黄色く、それ以外はグレーにする */}
+                {/* 現在のページが '/replab/legal' の場合のみ黄色く、それ以外はグレーにする */}
                 <Link 
-                  href="/legal" 
+                  href="/replab/legal" 
                   className={`transition-colors ${
-                    pathname === '/legal' 
+                    pathname === '/replab/legal' 
                       ? 'text-yellow-400 font-bold' 
                       : 'hover:text-white'
                   }`}
@@ -51,7 +51,7 @@ export const Footer = () => {
                   特定商取引法に基づく表記
                 </Link>
               </li>
-              <li><a href="#" className="hover:text-white transition-colors">利用規約</a></li>
+              <li><a href="/replab/legal" className="hover:text-white transition-colors">利用規約</a></li>
               <li><a href="#" className="hover:text-white transition-colors">プライバシー</a></li>
             </ul>
           </div>

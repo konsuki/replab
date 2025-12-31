@@ -95,7 +95,7 @@ export default function SignInPage() {
         {/* 利用規約など */}
         <p className="mt-4 text-center text-xs text-gray-500">
           登録することで、
-          <Link href="#" className="font-medium text-blue-600 hover:text-blue-500 underline ml-1">利用規約</Link>
+          <Link href="/replab/legal" className="font-medium text-blue-600 hover:text-blue-500 underline ml-1">利用規約</Link>
           および
           <Link href="#" className="font-medium text-blue-600 hover:text-blue-500 underline ml-1">プライバシーポリシー</Link>
           に同意したものとみなされます。

@@ -83,7 +83,7 @@ export const LoginModal = ({ isOpen, onClose }) => {
           {/* 利用規約リンクなど */}
           <p className="text-xs text-gray-500">
             続行することで、
-            <Link href="/legal" className="text-blue-600 hover:underline mx-1">利用規約</Link>
+            <Link href="/replab/legal" className="text-blue-600 hover:underline mx-1">利用規約</Link>
             に同意したものとみなされます。
           </p>
 
