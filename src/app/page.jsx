@@ -73,6 +73,8 @@ export default function Home() {
 
   const resultRef = useRef(null);
 
+  
+
   // --- API取得ロジック (Optimistic UI実装) ---
   const fetchComments = async (videoId, pageToken = null) => {
     // 初回検索時
@@ -157,10 +159,14 @@ export default function Home() {
     }
   };
 
-  const handleSearchResult = (resultData) => {
-    setSearchResult(resultData);
-  };
+  // Stateにキーワードを追加
+  const [searchKeyword, setSearchKeyword] = useState('');
 
+  // handleSearchResult 関数を修正
+  const handleSearchResult = (resultData, keyword) => { // キーワードも受け取る
+      setSearchResult(resultData);
+      setSearchKeyword(keyword);
+  };
   return (
     <div className="min-h-screen bg-white font-sans text-gray-900">
       <Header />
@@ -220,14 +226,14 @@ export default function Home() {
                     <>
                         {apiData.status === 'success' && apiData.comments && (
                           <CommentSearch 
-                            comments={apiData.comments} 
-                            onSearchResult={handleSearchResult} 
+                              comments={apiData.comments} 
+                              onSearchResult={(data, keyword) => handleSearchResult(data, keyword)} // キーワードをバケツリレー
                           />
                         )}
                         
                         <CommentDisplay 
-                          apiData={apiData} 
-                          searchResultJson={searchResult} 
+                          apiData={{...apiData, currentKeyword: searchKeyword}} // apiDataに混ぜるか、別propにする
+                          searchResultJson={searchResult}
                         />
 
                         {/* 「さらに読み込む」ボタン */}
