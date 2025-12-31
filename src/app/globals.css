@@ -1,33 +1,28 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui;
+  /* ▼▼▼ ここを変更 ▼▼▼ */
+  /* Inter (Google Fonts) を削除し、指定のシステムフォントスタックを設定 */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  
+  /* Monoはそのまま維持 */
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
 
 :root {
-  /* color-scheme: dark; を削除または light に変更 */
   color-scheme: light;
 }
 
 body {
-  /* 以下の !important がついている行を削除しました */
-  /* background-color: #030712 !important; */
-  /* color: #ffffff !important; */
-  
-  /* 標準的な設定に戻します */
   background-color: #ffffff;
-  color: #111827; /* gray-900 */
+  color: #111827;
   
+  /* 変数を適用 */
   font-family: var(--font-sans);
   min-height: 100vh;
   overflow-x: hidden;
 }
 
-/* 
-  注: もし背景が白になったことで .bg-grid の白い線が見えなくなる場合は、
-  このクラスも削除するか、線の色を黒(rgba(0,0,0,0.05)など)に変更してください。
-*/
 .bg-grid {
   background-size: 50px 50px;
   background-image: linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),

@@ -42,7 +42,7 @@ export const LoginModal = ({ isOpen, onClose }) => {
           <div>
             <div className="inline-flex items-center justify-center gap-2 font-bold text-xl text-gray-800 mb-4">
               <span className="bg-gradient-to-r from-orange-500 to-red-600 text-white px-2 py-1 rounded text-sm">AI</span>
-              <span>Replab</span>
+              <span>リプラボ</span>
             </div>
             <h3 className="text-2xl font-bold text-gray-900">
               以下からサインインしてください。
