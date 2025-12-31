@@ -22,20 +22,20 @@ const YOUTUBE_API_URL = 'https://backend-904463184290.asia-northeast1.run.app/ap
 // --- 信頼性セクション ---
 const TestimonialsSection = () => (
   <section className="container mx-auto px-4 py-20 text-center">
-    <h2 className="text-2xl font-bold mb-4">沢山の方にご愛用いただいております</h2>
-    <p className="text-gray-500 mb-10">あなたもきっと気に入るはず。</p>
+    <h2 className="text-2xl font-bold mb-4">沢山の方にご愛用いただきたい</h2>
+    <p className="text-gray-500 mb-10">あなたもきっと気に入ってほしい。</p>
     <div className="flex flex-col md:flex-row gap-6 justify-center max-w-5xl mx-auto">
       {[
         { 
           name: "YouTuber A氏", 
           role: "Channel Owner", 
-          text: "数千件のコメントからアンチコメントだけを抽出して対策するのに役立ちました。Geminiの精度がすごい。", 
+          text: "数千件のコメントからアンチコメントだけを抽出して対策するのに役立ってほしい。Geminiの精度がすごくあってほしいい。", 
           color: "border-red-500 text-red-600" 
         },
         { 
           name: "Company B", 
           role: "Marketing", 
-          text: "競合チャンネルの分析に使用。視聴者が何を求めているかがデータとして可視化されました。", 
+          text: "競合チャンネルの分析に使用したい。視聴者が何を求めているかがデータとして可視化されてほしい。", 
           color: "border-blue-500 text-blue-600" 
         }
       ].map((item, idx) => (
