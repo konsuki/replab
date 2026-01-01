@@ -1,9 +1,9 @@
 import httpx  # requests の代わりに httpx を使用
-import datetime
-from typing import List, Dict, Any, Optional
+import os
+from typing import Dict, Any, Optional
 
 URL = "https://www.googleapis.com/youtube/v3/"
-API_KEY = "YOUR_API_KEY"  # ★環境変数から取得することを推奨
+API_KEY = os.getenv("YOUTUBE_API_KEY")
 API_MAX_RESULTS = 100
 
 # format_comment_data 関数は変更なしのため省略
