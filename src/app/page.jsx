@@ -1,7 +1,6 @@
 // src/app/page.jsx
 'use client';
-import React, { useState, useRef } from 'react';
-
+import { useState, useRef } from 'react';
 // --- コンポーネントのインポート ---
 import { Header } from '../components/Header';
 import { HeroSection } from '../components/LP/HeroSection';
@@ -11,13 +10,13 @@ import { Footer } from '../components/Footer';
 import { CommentDisplay } from '../components/CommentDisplay';
 import { CommentSearch } from '../components/CommentSearch';
 import { LimitModal } from '../components/LimitModal';
+// ★ 追加: LoginModalのインポート
+import { LoginModal } from '../components/LoginModal';
 import { SkeletonCommentDisplay } from '../components/SkeletonCommentDisplay';
 // ★ 追加: 動画プレーヤーコンポーネント
 import { YouTubePlayer } from '../components/YouTubePlayer';
-
-// APIエンドポイント
-const YOUTUBE_API_URL = 'https://backend-904463184290.asia-northeast1.run.app/api/comments';
-// const YOUTUBE_API_URL = 'http://localhost:8000/api/comments';
+// APIエンドポイントを環境変数から取得
+const YOUTUBE_API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/comments';
 
 // --- 信頼性セクション ---
 const TestimonialsSection = () => (
@@ -60,7 +59,7 @@ export default function Home() {
   const [apiData, setApiData] = useState(null);
   
   // ローディング状態
-  const [loading, setLoading] = useState(false);         // 初回ロード用
+  const [loading, setLoading] = useState(false);        // 初回ロード用
   const [isLoadingMore, setIsLoadingMore] = useState(false); // 追加ロード用
 
   const [error, setError] = useState(null);
@@ -73,6 +72,8 @@ export default function Home() {
   
   // モーダル表示管理用State
   const [showLimitModal, setShowLimitModal] = useState(false);
+  // ★ 追加: ログインモーダル表示管理用State
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const resultRef = useRef(null);
 
@@ -87,6 +88,8 @@ export default function Home() {
         setNextPageToken(null);
         setError(null);
         setShowLimitModal(false);
+        // ★ 追加: 実行時に一旦閉じる（念のため）
+        setShowLoginModal(false);
         setLoading(true); 
 
         // 2. データ取得を待たずに、即座に結果エリアへスクロール開始
@@ -129,7 +132,8 @@ export default function Home() {
 
       // 401 (Unauthorized) チェック
       if (response.status === 401) {
-        setError("この機能を利用するにはログインが必要です。");
+        // ★ 修正: エラー表示ではなくログインモーダルを表示する
+        setShowLoginModal(true);
         setLoading(false);
         setIsLoadingMore(false);
         return;
@@ -180,6 +184,12 @@ export default function Home() {
         onClose={() => setShowLimitModal(false)} 
       />
 
+      {/* ★ 追加: ログインモーダルの配置 */}
+      <LoginModal 
+        isOpen={showLoginModal} 
+        onClose={() => setShowLoginModal(false)} 
+      />
+
       {/* エラー表示 */}
       {error && !loading && !apiData && (
         <div className="container mx-auto px-4 mt-8">
@@ -190,10 +200,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* 
-         結果表示エリア 
-         ★ apiDataがある時 OR loading中 の両方で表示する
-      */}
+      {/* 結果表示エリア ★ apiDataがある時 OR loading中 の両方で表示する */}
       {(apiData || loading) && (
         <section 
           ref={resultRef} 
@@ -217,10 +224,7 @@ export default function Home() {
               </div>
 
               <div className="p-6 md:p-8 space-y-8">
-                {/* 
-                   ★ ローディング中はスケルトンを表示、
-                   データ取得後はコンテンツを表示
-                */}
+                {/* ★ ローディング中はスケルトンを表示、データ取得後はコンテンツを表示 */}
                 {loading ? (
                     <SkeletonCommentDisplay />
                 ) : (
