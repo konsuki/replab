@@ -41,7 +41,7 @@ const YouTubeComment = ({ data, isReply = false, highlightKeyword = '' }) => {
 
   // テキストの正規化（HTMLタグ除去などが必要ならここで行う）
   // ここでは単純に小文字化してチェック
-  const textContent = data.text.toLowerCase();
+  const textContent = (data.text || "").toLowerCase();
   const keywordLower = highlightKeyword.toLowerCase();
 
   // キーワードが含まれているかチェック

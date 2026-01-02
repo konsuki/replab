@@ -1,10 +1,11 @@
 import httpx  # requests の代わりに httpx を使用
 import os
 from typing import Dict, Any, Optional
+import datetime
 
 URL = "https://www.googleapis.com/youtube/v3/"
-API_KEY = os.getenv("YOUTUBE_API_KEY")
 API_MAX_RESULTS = 100
+
 
 def format_comment_data(
     snippet_data: Dict[str, Any], is_reply: bool = False
@@ -42,13 +43,15 @@ def format_comment_data(
         "likes": like_cnt,
         "totalReplies": reply_count,
     }
-    
+
+
 async def fetch_comments_page(
     video_id: str, page_token: Optional[str] = None
 ) -> Dict[str, Any]:
     """
     指定されたページのコメント（最大100件）のみを非同期で取得して返します。
     """
+    API_KEY = os.getenv("YOUTUBE_API_KEY")
     params = {
         "key": API_KEY,
         "part": "replies, snippet",
