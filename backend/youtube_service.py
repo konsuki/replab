@@ -13,7 +13,7 @@ def format_comment_data(
     """コメントまたは返信のデータを整形して辞書として返します。"""
 
     if is_reply:
-        target_snippet = snippet_data
+        target_snippet = snippet_data.get("snippet", {})
         reply_count = 0
     else:
         # commentThreadsのitemまたはrepliesの中のコメントかを判断
