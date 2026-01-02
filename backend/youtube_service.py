@@ -6,7 +6,43 @@ URL = "https://www.googleapis.com/youtube/v3/"
 API_KEY = os.getenv("YOUTUBE_API_KEY")
 API_MAX_RESULTS = 100
 
-# format_comment_data 関数は変更なしのため省略
+def format_comment_data(
+    snippet_data: Dict[str, Any], is_reply: bool = False
+) -> Dict[str, Any]:
+    """コメントまたは返信のデータを整形して辞書として返します。"""
+
+    if is_reply:
+        target_snippet = snippet_data
+        reply_count = 0
+    else:
+        # commentThreadsのitemまたはrepliesの中のコメントかを判断
+        if "topLevelComment" in snippet_data:
+            target_snippet = snippet_data["topLevelComment"]["snippet"]
+        else:
+            target_snippet = snippet_data["snippet"]
+
+        reply_count = snippet_data.get("totalReplyCount", 0)
+
+    author = target_snippet.get("authorDisplayName")
+    pubdate_str = target_snippet.get("publishedAt")
+    text = target_snippet.get("textDisplay")
+    like_cnt = target_snippet.get("likeCount", 0)
+
+    try:
+        # ISO 8601形式の時刻文字列を整形
+        pubdate = datetime.datetime.strptime(pubdate_str, "%Y-%m-%dT%H:%M:%SZ")
+        pubdate_formatted = pubdate.strftime("%Y/%m/%d %H:%M:%S")
+    except (ValueError, TypeError, AttributeError):
+        pubdate_formatted = pubdate_str
+
+    return {
+        "author": author,
+        "date": pubdate_formatted,
+        "text": text,
+        "likes": like_cnt,
+        "totalReplies": reply_count,
+    }
+    
 async def fetch_comments_page(
     video_id: str, page_token: Optional[str] = None
 ) -> Dict[str, Any]:
