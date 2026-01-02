@@ -20,7 +20,7 @@ const YOUTUBE_API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:80
 
 // --- 信頼性セクション ---
 const TestimonialsSection = () => (
-  <section className="container mx-auto px-4 py-20 text-center">
+  <section className="container mx-auto px-8 py-20 text-center">
     <h2 className="text-2xl font-bold mb-4">沢山の方にご愛用いただきたい</h2>
     <p className="text-gray-500 mb-10">あなたもきっと気に入ってほしい。</p>
     <div className="flex flex-col md:flex-row gap-6 justify-center max-w-5xl mx-auto">
@@ -206,7 +206,7 @@ export default function Home() {
           ref={resultRef} 
           className="py-16 bg-gradient-to-b from-white to-blue-50 min-h-[600px]"
         >
-          <div className="container mx-auto px-4">
+          <div className="container mx-auto px-8">
             <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
               <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
                 <h2 className="text-lg font-bold text-gray-700">📊 分析結果</h2>

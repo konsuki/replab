@@ -70,7 +70,7 @@ export const FeaturesAndWorkflow = () => {
           3. 品質・機能紹介エリア (Features)
          =========================================== */}
       <section className="py-20 md:py-32 overflow-hidden">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-8">
           
           {/* タイトル部分 */}
           <motion.div 

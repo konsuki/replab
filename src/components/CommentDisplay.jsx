@@ -170,7 +170,7 @@ export const CommentDisplay = ({ apiData, searchResultJson }) => {
   }
 
   return (
-    <div className="p-6 bg-white dark:bg-gray-800 rounded-xl duration-300">
+    <div className="p-0 bg-white dark:bg-gray-800 rounded-xl duration-300">
       {/* 2. AI検索結果エリア */}
       <div className="mb-10">
         <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100 flex items-center gap-2">
