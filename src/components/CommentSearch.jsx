@@ -10,9 +10,9 @@ export const CommentSearch = ({ comments, onSearchResult }) => {
   // ★ 進行中のリクエストを管理するためのRef
   const abortControllerRef = useRef(null);
 
-  // const BACKEND_API_URL = "https://backend-904463184290.asia-northeast1.run.app/api/search-comments";
+  const BACKEND_API_URL = "https://backend-904463184290.asia-northeast1.run.app/api/search-comments";
   // またはローカルで動かしている場合
-  const BACKEND_API_URL = "http://localhost:8000/api/search-comments";
+  // const BACKEND_API_URL = "http://localhost:8000/api/search-comments";
 
   const handleSearch = async () => {
     if (!keyword.trim() || !comments || comments.length === 0) {

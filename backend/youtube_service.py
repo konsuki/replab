@@ -3,14 +3,14 @@ import os
 from typing import Dict, Any, Optional
 
 URL = "https://www.googleapis.com/youtube/v3/"
-API_KEY = os.getenv("YOUTUBE_API_KEY")
+API_KEY = "YOUR_API_KEY"  # ★環境変数から取得することを推奨
 API_MAX_RESULTS = 100
 
 # format_comment_data 関数は変更なしのため省略
 
+
 async def fetch_comments_page(
-    video_id: str, 
-    page_token: Optional[str] = None
+    video_id: str, page_token: Optional[str] = None
 ) -> Dict[str, Any]:
     """
     指定されたページのコメント（最大100件）のみを非同期で取得して返します。
@@ -37,7 +37,7 @@ async def fetch_comments_page(
             # コメント整形処理（既存ロジックと同じ）
             snippet = item["snippet"]
             comment = format_comment_data(snippet, is_reply=False)
-            
+
             # 返信の処理
             replies = []
             if "replies" in item and "comments" in item["replies"]:
@@ -49,7 +49,9 @@ async def fetch_comments_page(
         return {
             "status": "success",
             "video_id": video_id,
-            "next_page_token": resource.get("nextPageToken"), # 次のページがある場合トークンを返す
+            "next_page_token": resource.get(
+                "nextPageToken"
+            ),  # 次のページがある場合トークンを返す
             "total_results": resource.get("pageInfo", {}).get("totalResults"),
             "comments": comments_data,
         }
@@ -58,6 +60,7 @@ async def fetch_comments_page(
         return {"status": "error", "message": "YouTube API Error", "detail": str(e)}
     except Exception as e:
         return {"status": "error", "message": "Server Error", "detail": str(e)}
+
 
 # 互換性のための同期ラッパー（必要であれば）
 def fetch_comments_with_pagination(video_id, goal_max_results):
