@@ -15,8 +15,8 @@ import { LoginModal } from '../components/LoginModal';
 import { SkeletonCommentDisplay } from '../components/SkeletonCommentDisplay';
 // ★ 追加: 動画プレーヤーコンポーネント
 import { YouTubePlayer } from '../components/YouTubePlayer';
-// APIエンドポイントを環境変数から取得
-const YOUTUBE_API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/comments';
+// APIエンドポイントを環境変数から取得したものに/api/commentsをつけて変数に(なかったらローカルホストを使用)
+const YOUTUBE_API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000') + '/api/comments';
 
 // --- 信頼性セクション ---
 const TestimonialsSection = () => (
