@@ -41,9 +41,9 @@ export const Footer = () => {
               <li>
                 {/* 現在のページが '/replab/legal' の場合のみ黄色く、それ以外はグレーにする */}
                 <Link 
-                  href="/replab/legal" 
+                  href="/legal" 
                   className={`transition-colors ${
-                    pathname === '/replab/legal' 
+                    pathname === '/legal' 
                       ? 'text-yellow-400 font-bold' 
                       : 'hover:text-white'
                   }`}
@@ -51,7 +51,7 @@ export const Footer = () => {
                   特定商取引法に基づく表記
                 </Link>
               </li>
-              <li><a href="/replab/legal" className="hover:text-white transition-colors">利用規約</a></li>
+              <li><a href="/legal" className="hover:text-white transition-colors">利用規約</a></li>
               <li><a href="#" className="hover:text-white transition-colors">プライバシー</a></li>
             </ul>
           </div>
