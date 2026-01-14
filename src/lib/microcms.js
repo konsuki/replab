@@ -16,7 +16,6 @@ export const getList = async (queries) => {
   const listData = await client.getList({
     endpoint: "blogs",
     queries,
-    customRequestInit: { cache: 'no-store' },
   });
   return listData;
 };
