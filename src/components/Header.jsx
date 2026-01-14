@@ -90,7 +90,7 @@ export const Header = () => {
         <Link href="/" className="flex items-center gap-2 font-bold text-xl text-gray-800 hover:opacity-80 transition">
           {/* ▼▼▼ 修正: 青背景から赤〜オレンジのグラデーションへ変更 ▼▼▼ */}
           <span className="bg-gradient-to-r from-orange-500 to-red-600 text-white px-2 py-1 rounded text-sm">AI</span>
-          <span>Replab</span>
+          <span>リプラボ</span>
         </Link>
 
         {/* ナビゲーション (PC) */}

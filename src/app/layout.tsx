@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+// ▼▼▼ 修正: Inter を削除 ▼▼▼
+import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-// 1. ここに追加
 import { GoogleAnalytics } from '@next/third-parties/google';
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+// ▼▼▼ 修正: const inter = ... を削除 ▼▼▼
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains" });
 
 export const metadata: Metadata = {
@@ -19,7 +19,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja" className="scroll-smooth">
-      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans bg-background text-white antialiased`}>
+      {/* ▼▼▼ 修正: ${inter.variable} を削除 ▼▼▼ */}
+      <body className={`${jetbrainsMono.variable} font-sans bg-background text-gray-900 antialiased`}>
         {/* 背景のグリッドエフェクト */}
         <div className="fixed inset-0 z-[-1] bg-grid opacity-30 pointer-events-none" />
         
@@ -28,7 +29,6 @@ export default function RootLayout({
         </main>
       </body>
       
-      {/* 2. ここに追加 (G-XXXXXXXXXX は自分のIDに書き換えてください) */}
       <GoogleAnalytics gaId="G-JMYZC94M1X" />
     </html>
   );

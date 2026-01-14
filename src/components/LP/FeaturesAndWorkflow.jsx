@@ -70,7 +70,7 @@ export const FeaturesAndWorkflow = () => {
           3. 品質・機能紹介エリア (Features)
          =========================================== */}
       <section className="py-20 md:py-32 overflow-hidden">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-8">
           
           {/* タイトル部分 */}
           <motion.div 
@@ -110,7 +110,7 @@ export const FeaturesAndWorkflow = () => {
                   <div className="text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">User Input</div>
                   <div className="bg-gray-100 rounded-lg p-3 text-gray-800 font-medium flex items-center gap-2 border border-gray-200">
                     <span className="text-blue-500">🔍</span>
-                    「この<span className="text-blue-600 bg-blue-100 px-1 rounded">女優さんの名前</span>ってなんですか？」
+                    「この<span className="text-blue-600 bg-blue-100 px-1 rounded">女優さん</span>誰ですか？」
                   </div>
                 </div>
 

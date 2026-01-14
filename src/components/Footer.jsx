@@ -10,7 +10,7 @@ export const Footer = () => {
 
   return (
     <footer className="bg-gray-900 text-white pt-16 pb-8 border-t border-gray-800">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           
           {/* 製品 */}
@@ -39,7 +39,7 @@ export const Footer = () => {
             <ul className="text-gray-400 text-sm space-y-2">
               <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
               <li>
-                {/* 現在のページが '/legal' の場合のみ黄色く、それ以外はグレーにする */}
+                {/* 現在のページが '/replab/legal' の場合のみ黄色く、それ以外はグレーにする */}
                 <Link 
                   href="/legal" 
                   className={`transition-colors ${
@@ -51,7 +51,7 @@ export const Footer = () => {
                   特定商取引法に基づく表記
                 </Link>
               </li>
-              <li><a href="#" className="hover:text-white transition-colors">利用規約</a></li>
+              <li><a href="/legal" className="hover:text-white transition-colors">利用規約</a></li>
               <li><a href="#" className="hover:text-white transition-colors">プライバシー</a></li>
             </ul>
           </div>

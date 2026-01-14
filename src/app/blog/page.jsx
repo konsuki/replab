@@ -25,7 +25,7 @@ export default async function BlogListPage() {
       <Header />
 
       <main className="flex-grow pt-24 pb-16">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-8">
           
           {/* ページタイトルエリア */}
           <div className="text-center mb-12">

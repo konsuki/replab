@@ -62,7 +62,7 @@ export const UseCaseTabs = () => {
 
   return (
     <section className="py-20 bg-white">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-8">
         
         {/* ヘッダー */}
         <div className="text-center mb-12">

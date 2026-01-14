@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="128"
+   height="128"
+   viewBox="0 0 128 128"
+   version="1.1"
+   id="SVGRoot"
+   sodipodi:docname="C:\Users\konsu\AppData\Local\Temp\ink_ext_XXXXXX.svgV4JRI3"
+   inkscape:export-filename="icon.svg"
+   inkscape:export-xdpi="113.094"
+   inkscape:export-ydpi="113.094"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview137"
+     pagecolor="#ffffff"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     showgrid="true"
+     inkscape:zoom="4.7572176"
+     inkscape:cx="39.624002"
+     inkscape:cy="75.043866"
+     inkscape:window-width="1920"
+     inkscape:window-height="1057"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid260" />
+  </sodipodi:namedview>
+  <defs
+     id="defs132">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient2611">
+      <stop
+         style="stop-color:#ffa80b;stop-opacity:1;"
+         offset="0"
+         id="stop2609" />
+      <stop
+         style="stop-color:#ff840b;stop-opacity:1;"
+         offset="0.32625997"
+         id="stop2615" />
+      <stop
+         style="stop-color:#ed320b;stop-opacity:1;"
+         offset="0.68965518"
+         id="stop2607" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2611"
+       id="linearGradient2613"
+       x1="0.59455472"
+       y1="64.063286"
+       x2="127.82937"
+       y2="64.063286"
+       gradientUnits="userSpaceOnUse"
+       spreadMethod="repeat" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:url(#linearGradient2613);fill-opacity:1;stroke:none;stroke-width:2.59276;stroke-dasharray:none"
+       id="rect369"
+       width="127.23482"
+       height="127.53201"
+       x="0.59455472"
+       y="0.29727715"
+       ry="19.936153"
+       inkscape:export-filename="favicon.svg"
+       inkscape:export-xdpi="113.094"
+       inkscape:export-ydpi="113.094" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:66.7461px;line-height:1.25;font-family:sans-serif;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.893923"
+       x="23.832434"
+       y="88.914124"
+       id="text9416"
+       transform="scale(1.0614823,0.94207883)"><tspan
+         id="tspan9414"
+         x="23.832434"
+         y="88.914124"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:66.7461px;font-family:Corbel;-inkscape-font-specification:'Corbel Bold';fill:#ffffff;stroke-width:0.893923"
+         sodipodi:role="line">AI</tspan></text>
+  </g>
+</svg>

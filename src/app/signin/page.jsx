@@ -32,7 +32,7 @@ export default function SignInPage() {
           <Link href="/" className="inline-block">
             <div className="flex items-center justify-center gap-2 font-bold text-2xl text-gray-800 mb-2">
               <span className="bg-blue-600 text-white px-2 py-1 rounded text-lg">AI</span>
-              <span>Replab</span>
+              <span>リプラボ</span>
             </div>
           </Link>
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
@@ -95,7 +95,7 @@ export default function SignInPage() {
         {/* 利用規約など */}
         <p className="mt-4 text-center text-xs text-gray-500">
           登録することで、
-          <Link href="#" className="font-medium text-blue-600 hover:text-blue-500 underline ml-1">利用規約</Link>
+          <Link href="/replab/legal" className="font-medium text-blue-600 hover:text-blue-500 underline ml-1">利用規約</Link>
           および
           <Link href="#" className="font-medium text-blue-600 hover:text-blue-500 underline ml-1">プライバシーポリシー</Link>
           に同意したものとみなされます。
