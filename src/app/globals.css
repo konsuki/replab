@@ -1,10 +1,12 @@
 @import "tailwindcss";
 
+@config "../../tailwind.config.js";
+
 @theme {
   /* ▼▼▼ ここを変更 ▼▼▼ */
   /* Inter (Google Fonts) を削除し、指定のシステムフォントスタックを設定 */
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-  
+
   /* Monoはそのまま維持 */
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
@@ -16,7 +18,7 @@
 body {
   background-color: #ffffff;
   color: #111827;
-  
+
   /* 変数を適用 */
   font-family: var(--font-sans);
   min-height: 100vh;
